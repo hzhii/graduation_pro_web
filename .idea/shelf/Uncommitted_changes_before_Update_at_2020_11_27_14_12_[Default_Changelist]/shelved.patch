@@ -1,0 +1,183 @@
+Index: src/components/Login.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><template>\r\n  <div class=\"login_container\">\r\n    <div class=\"login_box\">\r\n      <!-- 头像区域 -->\r\n      <div class=\"avatar_box\">\r\n         <img src=\"../assets/logo.png\" />\r\n      </div>\r\n      <!-- 登录表单区-->\r\n      <el-form ref=\"loginFormRef\" :model=\"loginForm\" :rules=\"loginFormRules\" label-width=\"0px\" class=\"login_form\">\r\n        <!-- 用户名 -->\r\n        <el-form-item prop=\"DoctorAccount\">\r\n          <el-input prefix-icon=\"el-icon-user\" v-model=\"loginForm.DoctorAccount\"></el-input>\r\n        </el-form-item>\r\n        <!-- 密码 -->\r\n        <el-form-item prop=\"DoctorPassword\">\r\n          <el-input prefix-icon=\"el-icon-lock\" v-model=\"loginForm.DoctorPassword\" type=\"password\"></el-input>\r\n        </el-form-item>\r\n        <!-- 按钮区域 -->\r\n        <el-form-item class=\"btns\">\r\n          <el-button type=\"primary\" @click=\"login\">登录</el-button>\r\n          <el-button type=\"info\" @click=\"resetLoginForm\">重置</el-button>\r\n        </el-form-item>\r\n      </el-form>\r\n    </div>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\n  export default{\r\n    data(){\r\n      return{\r\n        //登录表单的数据绑定对象\r\n        loginForm:{\r\n            DoctorID:'',\r\n            DoctorAccount:'',\r\n            DoctorPassword:''\r\n        },\r\n        //表单验证规则对象\r\n        loginFormRules:{\r\n          //验证用户名是否合法\r\n            DoctorAccount:[\r\n            {required: true, message: '请输入用户名', trigger: 'blur'}\r\n          ],\r\n          //验证密码是否合法\r\n            DoctorPassword:[\r\n            {required: true, message: '请输入密码', trigger: 'blur'}\r\n          ]\r\n        }\r\n      }\r\n    },\r\n    methods:{\r\n      //点击重置按钮，重置登录\r\n      resetLoginForm(){\r\n        this.$refs.loginFormRef.resetFields();\r\n      },\r\n      login(){\r\n           this.$refs.loginFormRef.validate(async valid=>{\r\n           if(!valid) return;\r\n           /* const result = await this.$http.post('/studentSystem/login',this.loginForm) */\r\n          await this.$http.post('/studentSystem/login',this.loginForm).then((response)=>{\r\n            if(response.status == 200){\r\n              this.$message.success(\"登录成功\")\r\n              this.$router.push(\"/home\")\r\n            }else{\r\n              this.$message.error(\"用户名或密码错误\")\r\n            }\r\n             console.log(response)\r\n           }).catch((error)=>{\r\n             console.log(error)\r\n           })\r\n         })\r\n      }\r\n    }\r\n  }\r\n</script>\r\n\r\n<style scoped lang=\"less\">\r\n.login_container{\r\n  background-color: #2b4b6b;\r\n  height: 100%;\r\n}\r\n.login_box{\r\n  width: 450px;\r\n  height: 300px;\r\n  background-color: #fff;\r\n  border-radius: 3px;\r\n  position: absolute;\r\n  left: 50%;\r\n  top: 50%;\r\n  transform: translate(-50%,-50%);\r\n\r\n  .avatar_box{\r\n    height: 130px;\r\n    width: 130px;\r\n    border: 1px solid #eee;\r\n    border-radius: 50%;\r\n    padding: 10px;\r\n    box-shadow: 0 0 10px #ddd;\r\n    position: absolute;\r\n    left: 50%;\r\n    transform: translate(-50%,-50%);\r\n    background-color: #fff;\r\n    img{\r\n      width: 100%;\r\n      height: 100%;\r\n      border-radius: 50%;\r\n      background-color: #eee;\r\n    }\r\n  }\r\n}\r\n\r\n.btns{\r\n  display: flex;\r\n  justify-content: flex-end;\r\n}\r\n\r\n.login_form{\r\n    position: absolute;\r\n    bottom: 0;\r\n    width: 100%;\r\n    padding: 0 20px;\r\n    box-sizing: border-box;\r\n}\r\n\r\n</style>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/components/Login.vue	(revision 33f84ef1902cc2509e11a65fc903489f88cc23f6)
++++ src/components/Login.vue	(date 1606407785433)
+@@ -3,7 +3,7 @@
+     <div class="login_box">
+       <!-- 头像区域 -->
+       <div class="avatar_box">
+-         <img src="../assets/logo.png" />
++        <img src="../assets/logo.png"/>
+       </div>
+       <!-- 登录表单区-->
+       <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
+@@ -26,100 +26,101 @@
+ </template>
+ 
+ <script>
+-  export default{
+-    data(){
+-      return{
++  export default {
++    data() {
++      return {
+         //登录表单的数据绑定对象
+-        loginForm:{
+-            DoctorID:'',
+-            DoctorAccount:'',
+-            DoctorPassword:''
++        loginForm: {
++          DoctorID: '',
++          DoctorAccount: '',
++          DoctorPassword: ''
+         },
+         //表单验证规则对象
+-        loginFormRules:{
++        loginFormRules: {
+           //验证用户名是否合法
+-            DoctorAccount:[
++          DoctorAccount: [
+             {required: true, message: '请输入用户名', trigger: 'blur'}
+           ],
+           //验证密码是否合法
+-            DoctorPassword:[
++          DoctorPassword: [
+             {required: true, message: '请输入密码', trigger: 'blur'}
+           ]
+         }
+       }
+     },
+-    methods:{
++    methods: {
+       //点击重置按钮，重置登录
+-      resetLoginForm(){
++      resetLoginForm() {
+         this.$refs.loginFormRef.resetFields();
+       },
+-      login(){
+-           this.$refs.loginFormRef.validate(async valid=>{
+-           if(!valid) return;
+-           /* const result = await this.$http.post('/studentSystem/login',this.loginForm) */
+-          await this.$http.post('/studentSystem/login',this.loginForm).then((response)=>{
+-            if(response.status == 200){
++      login() {
++        this.$refs.loginFormRef.validate(async valid => {
++          if (!valid) return;
++          /* const result = await this.$http.post('/studentSystem/login',this.loginForm) */
++          await this.$http.post('/studentSystem/login', this.loginForm).then((response) => {
++            if (response.status == 200) {
+               this.$message.success("登录成功")
+               this.$router.push("/home")
+-            }else{
+-              this.$message.error("用户名或密码错误")
+             }
+-             console.log(response)
+-           }).catch((error)=>{
+-             console.log(error)
+-           })
+-         })
++            console.log(response)
++          }).catch((error) => {
++            this.$message.error("用户名或密码错误")
++            console.log(error)
++          })
++        })
+       }
+     }
+   }
+ </script>
+ 
+ <style scoped lang="less">
+-.login_container{
+-  background-color: #2b4b6b;
+-  height: 100%;
+-}
+-.login_box{
+-  width: 450px;
+-  height: 300px;
+-  background-color: #fff;
+-  border-radius: 3px;
+-  position: absolute;
+-  left: 50%;
+-  top: 50%;
+-  transform: translate(-50%,-50%);
++  .login_container {
++    background-color: #2b4b6b;
++    height: 100%;
++  }
++
++  .login_box {
++    width: 450px;
++    height: 300px;
++    background-color: #fff;
++    border-radius: 3px;
++    position: absolute;
++    left: 50%;
++    top: 50%;
++    transform: translate(-50%, -50%);
+ 
+-  .avatar_box{
+-    height: 130px;
+-    width: 130px;
+-    border: 1px solid #eee;
+-    border-radius: 50%;
+-    padding: 10px;
+-    box-shadow: 0 0 10px #ddd;
+-    position: absolute;
+-    left: 50%;
+-    transform: translate(-50%,-50%);
+-    background-color: #fff;
+-    img{
+-      width: 100%;
+-      height: 100%;
+-      border-radius: 50%;
+-      background-color: #eee;
+-    }
+-  }
+-}
++    .avatar_box {
++      height: 130px;
++      width: 130px;
++      border: 1px solid #eee;
++      border-radius: 50%;
++      padding: 10px;
++      box-shadow: 0 0 10px #ddd;
++      position: absolute;
++      left: 50%;
++      transform: translate(-50%, -50%);
++      background-color: #fff;
++
++      img {
++        width: 100%;
++        height: 100%;
++        border-radius: 50%;
++        background-color: #eee;
++      }
++    }
++  }
+ 
+-.btns{
+-  display: flex;
+-  justify-content: flex-end;
+-}
++  .btns {
++    display: flex;
++    justify-content: flex-end;
++  }
+ 
+-.login_form{
++  .login_form {
+     position: absolute;
+     bottom: 0;
+     width: 100%;
+     padding: 0 20px;
+     box-sizing: border-box;
+-}
++  }
+ 
+ </style>
