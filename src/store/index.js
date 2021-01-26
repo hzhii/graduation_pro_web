@@ -7,13 +7,14 @@ export default new Vuex.Store({
   state: {
     username: window.localStorage.getItem('username') == null ? '' : JSON.parse(window.localStorage.getItem('username' || '[]')),
     id: window.localStorage.getItem('id') == null ? '' : JSON.parse(window.localStorage.getItem('id' || '[]')),
-    token: window.localStorage.getItem('Access-Token') == null ? '' : JSON.parse(window.localStorage.getItem('Access-Token' || '[]')),
-    userMenus: [],
+    token: window.localStorage.getItem('token') == null ? '' : JSON.parse(window.localStorage.getItem('token' || '[]')),
+    userMenus: window.localStorage.getItem('userMenus') == null ? '' : JSON.parse(window.localStorage.getItem('userMenus' || '[]')),
     permissions: []
   },
   mutations: {
     initMenu (state, menus) {
       state.userMenus = menus
+      window.localStorage.setItem('userMenus', JSON.stringify(menus))
     },
     login (state, data) {
       state.username = data
@@ -27,10 +28,11 @@ export default new Vuex.Store({
       state.username = ''
       state.id = ''
       state.token = ''
+      state.userMenus = []
       window.localStorage.removeItem('username')
       window.localStorage.removeItem('id')
       window.localStorage.removeItem('token')
-      state.userMenus = []
+      window.localStorage.removeItem('userMenus')
       state.permissions = []
     },
     setId (state,data){

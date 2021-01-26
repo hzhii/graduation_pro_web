@@ -26,8 +26,7 @@ error => {
 
 //配置响应拦截器
 service.interceptors.response.use(response => {
-    const res = response.data
-      return res  
+    return response.data
   },error => {
     console.log('err' + error)
     store.commit('logout')

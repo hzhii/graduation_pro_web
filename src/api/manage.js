@@ -1,13 +1,15 @@
 import request from '../utils/request'
 
 const api = {
-    user: '/api/getUserList',
+    queryUser: '/user/getUserList',
+    updateUser: '/user/updateUser',
+    getMenu: '/menu/userMenu',
+    auth: '/menu/authentication',
     role: '/api/roleInfo',
     service: '/service',
     permission: '/permission',
     permissionNoPager: '/permission/no-pager',
-    info: '/api/getUserById',
-    update: '/api/updateUser',
+    info: '/api/getUserById'
   }
 
 //增加员工
@@ -17,7 +19,7 @@ const api = {
 //修改员工
 export function updateUser (parameter) {
     return request({
-      url: api.update,
+      url: api.updateUser,
       method: 'post',
       data: parameter,
       headers: {
@@ -26,14 +28,29 @@ export function updateUser (parameter) {
     })
   }
 
-//查询员工
-export function getUserList (parameter) {
+//查询菜单
+export function getMenu () {
     return request({
-      url: api.user,
+      url: api.getMenu,
+      method: 'get',
+    })
+  }
+//查询员工
+  export function queryUser (parameter) {
+    return request({
+      url: api.queryUser,
       method: 'get',
       params: parameter
     })
   }
+
+//防止构造参数绕过验证
+export function getAuth () {
+  return request({
+    url: api.auth,
+    method: 'get',
+  })
+}
 
 //修改密码
 

@@ -3,14 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-/*
-* 解决重复路由报错
-* */
-const originalPush = Router.prototype.push
-Router.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
-
 const routes = [
   {
     path: '/',
@@ -26,17 +18,8 @@ const routes = [
     meta: {
       requireAuth: true
     },
-    component: () => import('@/components/Home'), 
-    children: [
-      {
-        path: '/user/welcome',
-        name: 'Welcome',
-        component: () => import('@/components/Welcome'),
-        meta: {
-          requireAuth: true
-        }
-      }
-    ]
+    component: () => import('@/components/system/Index'), 
+    children: []
   },
   {
     path: '*',

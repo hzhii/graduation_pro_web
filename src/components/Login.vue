@@ -70,8 +70,7 @@ export default {
           message: '欢迎回来~',
           type:'success'
         });
-            this.$router.push("/home")
-            console.log("perms",response.result.perms)
+            this.$router.push("/user")
           } else {
             this.$message.error("用户名或密码错误")
           }
