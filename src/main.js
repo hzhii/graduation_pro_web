@@ -14,7 +14,7 @@ import './assets/css/global.css'
 Vue.config.productionTip = false
 // 路由守航
 router.beforeEach((to, from, next) => {
-  if (store.state.username && to.path.startsWith('/user')) {
+  if (store.state.username) {
     initMenu(router, store)
   }
   if (store.state.username && to.path.startsWith('/login')) {
@@ -48,9 +48,16 @@ const initMenu = (router, store) => {
     return
   }
   getMenu().then(resp => {
-    const _this = this
+    let fmtRoute2 = {
+      path: '*',
+      component: () => import("@/components/ErrorPage/404Page"),
+      name: '404',
+      nameZh: '错误页',
+      hidden: false
+    }
     if (resp && resp.code === 200) {
       var fmtRoutes = formatRoutes(resp.result)
+      fmtRoutes.push(fmtRoute2)
       router.addRoutes(fmtRoutes)
       store.commit('initMenu', fmtRoutes)
       console.log("mainjs",store.state.userMenus)
@@ -66,7 +73,6 @@ const formatRoutes = (routes) => {
       // 遍历这个列表，首先判断一条菜单项是否含子项，如果含则进行递归处理。添加到子项中
       route.children = formatRoutes(route.children)
     }
-
     let fmtRoute = {
       path: route.path, // admin
       component: resolve => {
@@ -78,7 +84,8 @@ const formatRoutes = (routes) => {
       meta: {
         requireAuth: true
       },
-      children: route.children // 子节点
+      children: route.children, // 子节点
+      hidden: true
     }
     console.log("maincomponent",fmtRoute.path)
     fmtRoutes.push(fmtRoute)

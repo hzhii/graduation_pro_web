@@ -8,7 +8,7 @@
       :collapse="isCollapse"
     >
       <!--index 没有用但是必需字段-->
-      <el-submenu v-for="(item, i) in userMenus" :key="i" :index="i.toString()">
+      <el-submenu v-for="(item, i) in userMenus" v-if="item.hidden" :key="i" :index="i.toString()">
         <span slot="title" style="font-size: 17px;">
           <i :class="item.iconCls"></i>
           {{ item.nameZh }}

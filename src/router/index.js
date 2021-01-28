@@ -1,36 +1,35 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
-const routes = [
-  {
-    path: '/',
-    component: () => import('@/components/Login'),
-  },
-  {
-    path: '/login',
-    component: () => import('@/components/Login'),
-  },
-  {
-    path: '/user',
-    name: 'User',
-    meta: {
-      requireAuth: true
-    },
-    component: () => import('@/components/system/Index'), 
-    children: []
-  },
-  {
-    path: '*',
-    component: () => import('@/components/ErrorPage/404Page')
-  }
-]
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err);
+};
 
 const router = new Router({
-  mode: 'history',
-  routes
-})
+  mode: "history",
+  routes: [
+    {
+      path: "/",
+      component: () => import("@/components/Login")
+    },
+    {
+      path: "/login",
+      component: () => import("@/components/Login")
+    },
+    {
+      path: "/index",
+      name: "Index",
+      meta: {
+        requireAuth: true
+      },
+      component: () => import("@/components/system/Index"),
+      redirect: '/system/welcome',
+      children: []
+    }
+  ]
+});
 
-export default router
-
+export default router;

@@ -70,7 +70,7 @@ export default {
           message: '欢迎回来~',
           type:'success'
         });
-            this.$router.push("/user")
+            this.$router.push("/index")
           } else {
             this.$message.error("用户名或密码错误")
           }
