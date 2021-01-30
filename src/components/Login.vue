@@ -12,7 +12,7 @@
           <el-input prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item prop="password">
+        <el-form-item prop="password" @keyup.enter.native="signIn">
           <el-input prefix-icon="el-icon-lock" v-model="loginForm.password" type="password"></el-input>
         </el-form-item>
         <!-- 按钮区域 -->
