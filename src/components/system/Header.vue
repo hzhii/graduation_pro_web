@@ -1,15 +1,22 @@
 <template>
   <!-- 头部区域 -->
- <div class="container">
+  <div class="container">
     <div class="title">
       <span>档案信息管理系统</span>
     </div>
     <div class="box">
       <!-- 头像 -->
       <div class="head">
-        <el-avatar
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-        ></el-avatar>
+        <img
+          :src="
+            this.$store.state.user.avaterName
+              ? 'http://localhost:8080' +
+                '/avatar/' +
+                this.$store.state.user.avaterName
+              : Avatar
+          "
+          class="user-avatar"
+        />
       </div>
       <!-- 登录姓名 -->
       <div class="name">
@@ -18,7 +25,9 @@
             {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-user">个人信息</el-dropdown-item>
+            <router-link to="/system/info">
+              <el-dropdown-item icon="el-icon-user">个人信息</el-dropdown-item>
+            </router-link>
             <el-dropdown-item icon="el-icon-edit">修改密码</el-dropdown-item>
             <el-dropdown-item
               icon="el-icon-switch-button"
@@ -29,13 +38,20 @@
         </el-dropdown>
       </div>
     </div>
- </div>
+  </div>
 </template>
 
 <script>
 import { logout } from "@/api/login";
+import Avatar from "@/assets/avatar.png";
+
 export default {
   name: "Header",
+  data() {
+    return {
+      Avatar: Avatar
+    };
+  },
   computed: {
     username() {
       return this.$store.state.username;
@@ -73,20 +89,40 @@ export default {
 </script>
 
 <style lang="less" scoped>
- .container{
-   width: 100%;
-   position: relative;
-   .box{
-     display: flex;
-     position: absolute;
-     left: 90%;
-     .name{
-       margin: 0 15px;
-     }
-     >div{
-       display: flex;
-       align-items: center
-     }
-   }
- }
+.container {
+  width: 100%;
+  position: relative;
+  .box {
+    display: flex;
+    position: absolute;
+    left: 90%;
+    .name {
+      margin: 0 15px;
+    }
+    > div {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+.router-link-active {
+  text-decoration: none;
+}
+
+.avatar-wrapper {
+  margin-top: 5px;
+  position: relative;
+}
+
+.user-avatar {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
 </style>

@@ -3,7 +3,7 @@ import Router from "vue-router";
 
 Vue.use(Router);
 
-const originalPush = Router.prototype.push
+const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err);
 };
@@ -26,8 +26,24 @@ const router = new Router({
         requireAuth: true
       },
       component: () => import("@/components/system/Index"),
-      redirect: '/system/welcome',
-      children: []
+      redirect: "/system/welcome",
+      children: [
+        {
+          path: "/system/welcome",
+          name: "welcome",
+          meta: {
+            requireAuth: true
+          },
+          component: () => import("@/components/Welcome")
+        },
+        {
+          path: "/system/info",
+          meta: {
+            requireAuth: true
+          },
+          component: () => import("@/components/MyInfo")
+        }
+      ]
     }
   ]
 });

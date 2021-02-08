@@ -3,6 +3,8 @@ import request from "../utils/request";
 const api = {
   queryUser: "/user/getAllUser",
   updateUser: "/user/updateUser",
+  updatePass: "/user/updatePwd",
+  getInfo: "/user/info",
   getMenu: "/menu/userMenu",
   auth: "/menu/authentication",
   role: "/api/roleInfo",
@@ -36,12 +38,20 @@ export function getMenu() {
   });
 }
 
-//查询员工
+//查询所有员工
 export function queryUser(parameter) {
   return request({
     url: api.queryUser,
     method: "get",
     params: parameter
+  });
+}
+
+//查询当前用户信息
+export function getInfo() {
+  return request({
+    url: api.getInfo,
+    method: "get"
   });
 }
 
@@ -54,5 +64,12 @@ export function getAuth() {
 }
 
 //修改密码
+export function updatePass(parameter) {
+  return request({
+    url: api.updatePass,
+    method: "post",
+    data: parameter
+  });
+}
 
 //获取权限
