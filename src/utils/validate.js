@@ -69,6 +69,16 @@ export function isvalidPhone(phone) {
   return reg.test(phone);
 }
 
+export function isChinese(chinese) {
+  const reg = /[^\u4E00-\u9FA5]/g;
+  return reg.test(chinese);
+}
+
+export function isNumber(number) {
+  const reg = /^[0-9]+$/;
+  return reg.test(number);
+}
+
 /**
  * @param {string} str
  * @returns {Boolean}

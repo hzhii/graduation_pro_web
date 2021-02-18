@@ -28,7 +28,6 @@
             <router-link to="/system/info">
               <el-dropdown-item icon="el-icon-user">个人信息</el-dropdown-item>
             </router-link>
-            <el-dropdown-item icon="el-icon-edit">修改密码</el-dropdown-item>
             <el-dropdown-item
               icon="el-icon-switch-button"
               @click.native="warn()"

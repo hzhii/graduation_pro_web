@@ -50,11 +50,11 @@
               </li>
               <li>
                 <i class="el-icon-sunny"></i> 用户角色
-                <div class="user-right">{{ userInfo.role }}</div>
+                <div class="user-right">{{ roleName }}</div>
               </li>
               <li>
                 <i class="el-icon-water-cup"></i> 所属部门
-                <div class="user-right">{{ userInfo.dep }}</div>
+                <div class="user-right">{{ deptName }}</div>
               </li>
               <li>
                 <i class="el-icon-mobile-phone"></i> 手机号码
@@ -143,6 +143,8 @@ export default {
       activeName: "first",
       Avatar: Avatar,
       form: {},
+      deptName: "",
+      roleName: "",
       saveLoading: false,
       userInfo: {},
       rules: {
@@ -164,6 +166,8 @@ export default {
       getInfo().then(res => {
         that.userInfo = res.result;
         that.form = res.result;
+        that.deptName = res.result.dept.deptName;
+        that.roleName = res.result.sysrole.nameZh;
       });
     },
     //上传成功回调

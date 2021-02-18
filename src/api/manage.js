@@ -2,12 +2,19 @@ import request from "../utils/request";
 
 const api = {
   queryUser: "/user/getAllUser",
-  updateUser: "/user/updateUser",
   updatePass: "/user/updatePwd",
   getInfo: "/user/info",
   getMenu: "/menu/userMenu",
   auth: "/menu/authentication",
-  role: "/api/roleInfo",
+  getRoleInfo: "/role/getAllRole",
+  getDeptInfo: "/dept/getAllDept",
+  getUserRole: "/role/getUserRole",
+  getUserDept: "/dept/getUserDept",
+  vaildUserName: "/user/vaildUserName",
+  addUser: "/user/addUser",
+  deleteUser: "user/deleteUser",
+  updateUser: "/user/updateUser",
+  fuzzySearch: "user/search",
   service: "/service",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
@@ -15,6 +22,22 @@ const api = {
 };
 
 //增加员工
+export function addUser(parameter) {
+  return request({
+    url: api.addUser,
+    method: "post",
+    data: parameter
+  });
+}
+
+//增加员工
+export function deleteUser(parameter) {
+  return request({
+    url: api.deleteUser,
+    method: "post",
+    data: parameter
+  });
+}
 
 //删除员工
 
@@ -23,10 +46,7 @@ export function updateUser(parameter) {
   return request({
     url: api.updateUser,
     method: "post",
-    data: parameter,
-    headers: {
-      "Content-Type": "application/json;charset=UTF-8"
-    }
+    data: parameter
   });
 }
 
@@ -67,6 +87,58 @@ export function getAuth() {
 export function updatePass(parameter) {
   return request({
     url: api.updatePass,
+    method: "post",
+    data: parameter
+  });
+}
+
+//查询所有角色信息
+export function getRoleInfo() {
+  return request({
+    url: api.getRoleInfo,
+    method: "get"
+  });
+}
+
+//根据用户id查询对应的角色信息
+export function getUserRole(parameter) {
+  return request({
+    url: api.getUserRole,
+    method: "get",
+    params: parameter
+  });
+}
+
+//根据用户id查询对应的部门信息
+export function getUserDept(parameter) {
+  return request({
+    url: api.getUserDept,
+    method: "get",
+    params: parameter
+  });
+}
+
+//查询所有部门信息
+export function getDeptInfo() {
+  return request({
+    url: api.getDeptInfo,
+    method: "get"
+  });
+}
+
+//用户名重复校验
+export function vaildUserName(parameter) {
+  return request({
+    url: api.vaildUserName,
+    method: "get",
+    params: parameter
+  });
+}
+
+//模糊查询
+export function fuzzySearch(parameter) {
+  return request({
+    url: api.fuzzySearch,
     method: "post",
     data: parameter
   });
