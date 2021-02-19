@@ -12,9 +12,12 @@ const api = {
   getUserDept: "/dept/getUserDept",
   vaildUserName: "/user/vaildUserName",
   addUser: "/user/addUser",
-  deleteUser: "user/deleteUser",
+  deleteUser: "/user/deleteUser",
   updateUser: "/user/updateUser",
-  fuzzySearch: "user/search",
+  fuzzySearch: "/user/search",
+  getCharts1: "/user/charts",
+  getCharts2: "/user/charts2",
+  getCharts3: "/user/charts3",
   service: "/service",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
@@ -141,6 +144,30 @@ export function fuzzySearch(parameter) {
     url: api.fuzzySearch,
     method: "post",
     data: parameter
+  });
+}
+
+//echarts图标渲染
+export function getCharts1() {
+  return request({
+    url: api.getCharts1,
+    method: "get"
+  });
+}
+
+//echarts图标渲染
+export function getCharts2() {
+  return request({
+    url: api.getCharts2,
+    method: "get"
+  });
+}
+
+//echarts图标渲染
+export function getCharts3() {
+  return request({
+    url: api.getCharts3,
+    method: "get"
   });
 }
 

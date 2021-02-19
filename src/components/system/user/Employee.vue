@@ -55,7 +55,7 @@
               class="filter-item"
               type="primary"
               icon="el-icon-download"
-              @click=""
+              @click="outExe()"
               >档案导出</el-button
             >
           </div>
@@ -362,6 +362,7 @@ export default {
       show: false,
       noEdit: true,
       tableData: [],
+      excelData: [],
       queryInfo: {
         query: "",
         pageNum: 1,
@@ -584,6 +585,55 @@ export default {
     clear() {
       this.queryInfo.query = "";
       this.getAllUser();
+    },
+    //excel
+    outExe() {
+      const that = this;
+      this.$confirm("此操作将导出excel文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.excelData = this.tableData; //你要导出的数据list。
+          console.log("excel", this.excelData);
+          that.export2Excel();
+        })
+        .catch(() => {});
+    },
+    export2Excel() {
+      var that = this;
+      require.ensure([], () => {
+        const { export_json_to_excel } = require("../../../excel/Export2Excel"); //这里必须使用绝对路径
+        const tHeader = [
+          "id",
+          "name",
+          "username",
+          "sex",
+          "age",
+          "address",
+          "telephone",
+          "nameZh",
+          "deptName"
+        ]; // 导出的表头名
+        const filterVal = [
+          "id",
+          "name",
+          "username",
+          "sex",
+          "age",
+          "address",
+          "telephone",
+          "nameZh",
+          "deptName"
+        ]; // 导出的表头字段名
+        const list = that.excelData;
+        const data = that.formatJson(filterVal, list);
+        export_json_to_excel(tHeader, data, `用户档案excel`); // 导出的表格名称，根据需要自己命名
+      });
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
     }
   },
   created() {

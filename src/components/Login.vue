@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="login_container"
-    :style="'background-image:url(' + Background + ');'"
-  >
+  <div class="login_container" :style="'background-image:url(' + bg + ');'">
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avatar_box">
@@ -45,10 +42,12 @@
 <script>
 import { login } from "@/api/login";
 import Background from "@/assets/background.jpg";
+import bg from "@/assets/bg.jpg";
 export default {
   data() {
     return {
       Background: Background,
+      bg: bg,
       //登录表单的数据绑定对象
       loginForm: {
         id: "",
@@ -120,7 +119,7 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%;
-  opacity: 95%;
+  opacity: 90%;
   transform: translate(-50%, -50%);
 
   .avatar_box {
