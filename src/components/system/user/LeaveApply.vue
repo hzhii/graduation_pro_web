@@ -21,6 +21,7 @@
         </div>
         <!-- 主体内容 -->
         <div class="main">
+          <!-- 查询区域 -->
           <!-- 操作按钮区域 -->
           <div class="button">
             <el-button type="primary" @click="applyAdd" icon="el-icon-edit"
@@ -34,57 +35,68 @@
               style="width: 100%"
               :default-sort="{ prop: 'date', order: 'descending' }"
             >
-              <el-table-column
-                prop="id"
-                label="id"
-                sortable
-                width="180"
-                v-if="show"
-              >
+              <el-table-column type="expand">
+                <template slot-scope="props">
+                  <el-form
+                    label-position="left"
+                    inline
+                    class="demo-table-expand"
+                  >
+                    <el-form-item label="请假原因">
+                      <span>{{ props.row.reason }}</span>
+                    </el-form-item>
+                  </el-form>
+                </template>
               </el-table-column>
-              <el-table-column prop="name" label="姓名" sortable width="180">
+              <el-table-column prop="id" label="id" width="180" v-if="show">
+              </el-table-column>
+              <el-table-column prop="userName" label="姓名" width="180">
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="type"
                 label="请假类型"
                 sortable
                 width="180"
               >
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="startTime"
                 label="请假开始时间"
+                width="180"
+              >
+              </el-table-column>
+              <el-table-column prop="endTime" label="请假结束时间" width="180">
+              </el-table-column>
+              <el-table-column
+                prop="createTime"
+                label="创建时间"
                 sortable
                 width="180"
               >
               </el-table-column>
               <el-table-column
-                prop="name"
-                label="请假结束时间"
-                sortable
-                width="180"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="请假原因"
-                sortable
-                width="180"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="telephone"
-                label="联系电话"
-                sortable
-                width="180"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="telephone"
+                prop="status"
                 label="审核状态"
                 sortable
                 width="180"
               >
+                <template slot-scope="scope">
+                  <el-tag
+                    :type="
+                      scope.row.status == ''
+                        ? ' '
+                        : scope.row.status == '通过'
+                        ? 'primary'
+                        : scope.row.auditStatus == '不通过'
+                        ? 'warning'
+                        : 'danger'
+                    "
+                    :disable-transitions="false"
+                    >{{ scope.row.status }}</el-tag
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column prop="leader" label="审核人" width="180">
               </el-table-column>
               <el-table-column
                 label="操作"
@@ -93,22 +105,50 @@
                 align="center"
               >
                 <template slot-scope="scope">
-                  <!-- 修改操作按钮 -->
-                  <el-button
-                    type="primary"
-                    icon="el-icon-edit"
-                    size="mini"
-                    @click=""
-                  >
-                  </el-button>
-                  <el-popconfirm title="确定删除吗？" @onConfirm="">
-                    <el-button
-                      type="danger"
-                      icon="el-icon-delete"
-                      size="mini"
-                      slot="reference"
-                    ></el-button>
-                  </el-popconfirm>
+                  <el-row>
+                    <el-col :span="8">
+                      <el-popconfirm
+                        title="确定给予通过吗？"
+                        @onConfirm="handlePass(scope.row.id)"
+                      >
+                        <el-button
+                          type="success"
+                          icon="el-icon-check"
+                          size="mini"
+                          slot="reference"
+                          circle
+                        ></el-button>
+                      </el-popconfirm>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-popconfirm
+                        title="确定不予通过吗？"
+                        @onConfirm="handleNoPass(scope.row.id)"
+                      >
+                        <el-button
+                          type="warning"
+                          icon="el-icon-close"
+                          size="mini"
+                          slot="reference"
+                          circle
+                        ></el-button>
+                      </el-popconfirm>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-popconfirm
+                        title="确定删除吗？"
+                        @onConfirm="handleDelete(scope.row.id)"
+                      >
+                        <el-button
+                          type="danger"
+                          icon="el-icon-delete"
+                          size="mini"
+                          slot="reference"
+                          circle
+                        ></el-button>
+                      </el-popconfirm>
+                    </el-col>
+                  </el-row>
                 </template>
               </el-table-column>
             </el-table>
@@ -134,44 +174,62 @@
             width="590px"
             append-to-body
           >
-            <div ref="step">
-              <el-steps :active="active" finish-status="success">
-                <el-step title="个人信息"></el-step>
-                <el-step title="请假信息"></el-step>
-                <el-step title="提交状态"></el-step>
-              </el-steps>
-              <el-form ref="applyFormRef" :model="applyForm">
-                <div ref="form1" v-if="active == 0">
-                  <el-form-item label="名字">
-                    <el-input v-model="applyForm.name"></el-input>
-                  </el-form-item>
-                  <el-form-item label="性别">
-                    <el-input v-model="applyForm.sex"></el-input>
-                  </el-form-item>
-                  <el-form-item label="所属部门">
-                    <el-input v-model="applyForm.dep"></el-input>
-                  </el-form-item>
-                  <el-form-item label="联系电话">
-                    <el-input v-model="applyForm.telephone"></el-input>
-                  </el-form-item>
-                </div>
-                <div ref="form2" v-if="active == 1">1</div>
-                <div ref="form3" v-if="active == 2">2</div>
+            <div>
+              <el-form
+                :model="applyForm"
+                :rules="rules"
+                ref="applyForm"
+                label-width="100px"
+                class="demo-border"
+              >
+                <el-form-item label="用户id" prop="userId" v-show="hide">
+                  <el-input v-model="applyForm.id"></el-input>
+                </el-form-item>
+                <el-form-item label="申请类型" prop="type">
+                  <el-select
+                    v-model="applyForm.type"
+                    placeholder="请选择申请类型"
+                  >
+                    <el-option
+                      v-for="item in types"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="开始时间" prop="startTime">
+                  <el-date-picker
+                    v-model="applyForm.startTime"
+                    type="date"
+                    placeholder="选择日期"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="结束时间" prop="endTime">
+                  <el-date-picker
+                    v-model="applyForm.endTime"
+                    type="date"
+                    placeholder="选择日期"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="请假原因" prop="reason">
+                  <el-input
+                    type="textarea"
+                    v-model="applyForm.reason"
+                  ></el-input>
+                </el-form-item>
+                <el-button @click="" size="small">取消</el-button>
+                <el-button type="primary" @click="handleSubmit" size="small"
+                  >提交申请</el-button
+                >
               </el-form>
-              <div ref="button">
-                <el-button
-                  style="margin-top: 12px;"
-                  @click="next"
-                  v-if="active != 3"
-                  >下一步</el-button
-                >
-                <el-button
-                  style="margin-top: 12px;"
-                  @click="applyClose"
-                  v-if="active == 3"
-                  >关闭</el-button
-                >
-              </div>
             </div>
           </el-dialog>
         </div>
@@ -181,16 +239,46 @@
 </template>
 
 <script>
+import {
+  leaveApply,
+  getLeaveRecord,
+  getMyRecord,
+  getDeptRecord,
+  handlePass,
+  handleNoPass,
+  handleDeleteLeave
+} from "@/api/manage";
+import store from "@/store";
 export default {
   data() {
     return {
-      active: 0,
       applyForm: {
-        name: "",
-        sex: "",
-        dep: "",
-        telephone: ""
+        type: "",
+        startTime: "",
+        endTime: "",
+        reason: "",
+        id: this.$store.state.id
       },
+      types: [
+        {
+          value: "事假",
+          label: "事假"
+        },
+        {
+          value: "年假",
+          label: "年假"
+        },
+        {
+          value: "病假",
+          label: "病假"
+        },
+        {
+          value: "产假",
+          label: "产假"
+        }
+      ],
+      hide: false,
+      value1: "",
       tableData: [],
       show: false,
       queryInfo: {
@@ -200,25 +288,37 @@ export default {
       total: 0,
       applyTitle: "请假申请",
       applyVisible: false,
-      applyForm: {},
-      rules: {}
+      rules: {
+        type: [
+          { required: true, trigger: "change", message: "请选择请假类型" }
+        ],
+        reason: [
+          { required: true, trigger: "blur", message: "请输入请假理由" }
+        ],
+        startTime: [
+          {
+            required: true,
+            trigger: "blur",
+            message: "请输入开始时间"
+          }
+        ],
+        endTime: [
+          { required: true, trigger: "blur", message: "请输入结束时间" }
+        ]
+      }
     };
   },
   methods: {
     next() {
-      if (this.active++ > 2) this.active = 0;
+      if (this.active++ > 1) this.active = 0;
     },
     applyClose() {
       this.applyVisible = false;
-      this.active = 0;
-      this.applyForm.name = "";
-      this.applyForm.sex = "";
-      this.applyForm.telephone = "";
-      this.applyForm.dep = "";
-      this.$refs.applyFormRef.resetFields();
-    },
-    applySubmit() {
-      console.log("提交成功!");
+      this.applyForm.type = "";
+      this.applyForm.startTime = "";
+      this.applyForm.endTime = "";
+      this.applyForm.reason = "";
+      this.$refs.applyForm.resetFields();
     },
     applyAdd() {
       this.applyVisible = true;
@@ -226,16 +326,94 @@ export default {
     //监听pagesize改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.pageSize = newSize;
-      this.getAllUser();
+      this.getRecord();
     },
     //监听页码值改变的事件
     handleCurrentChange(newPage) {
       this.queryInfo.pageNum = newPage;
-      this.getAllUser();
+      this.getRecord();
+    },
+    //提交添加表单
+    handleSubmit() {
+      const that = this;
+      this.$refs.applyForm.validate(async valid => {
+        if (!valid) return;
+        //发起添加的网络请求
+        await leaveApply(this.applyForm)
+          .then(response => {
+            if (response.code == 200) {
+              this.$message.success("提交成功!");
+              that.getRecord();
+            } else {
+              this.$message.error("提交失败,请稍后再试!");
+            }
+          })
+          .catch(error => {
+            this.$message.warning("系统异常，请稍后重试");
+            console.log(error);
+          });
+        that.applyClose();
+      });
+    },
+    getRecord() {
+      const that = this;
+      const role = this.$store.state.user.sysrole.nameZh;
+      if (role == "系统管理员") {
+        getLeaveRecord(this.queryInfo).then(resp => {
+          if (resp.code == 200) {
+            that.tableData = resp.result.list;
+            that.total = resp.result.total;
+          } else {
+            that.$message.warning(resp.message);
+          }
+        });
+      } else if (role == "普通员工") {
+        getMyRecord(this.queryInfo).then(resp => {
+          if (resp.code == 200) {
+            that.tableData = resp.result.list;
+            that.total = resp.result.total;
+          } else {
+            that.$message.warning(resp.message);
+          }
+        });
+      } else {
+        getDeptRecord(this.queryInfo).then(resp => {
+          if (resp.code == 200) {
+            that.tableData = resp.result.list;
+            that.total = resp.result.total;
+          } else {
+            that.$message.warning(resp.message);
+          }
+        });
+      }
+    },
+    handleDelete(record) {
+      handleDeleteLeave({ id: record }).then(resp => {
+        if (resp.code == 200) {
+          this.$message.success("删除成功");
+          this.getRecord();
+        }
+      });
+    },
+    handlePass(record) {
+      handlePass({ id: record }).then(resp => {
+        if (resp.code == 200) {
+          this.$message.success("通过成功");
+          this.getRecord();
+        }
+      });
+    },
+    handleNoPass(record) {
+      handleNoPass({ id: record }).then(resp => {
+        if (resp.code == 200) {
+          this.$message.success("不通过成功");
+          this.getRecord();
+        }
+      });
     }
   },
   created() {
-    console.log(this.active);
+    this.getRecord();
   }
 };
 </script>

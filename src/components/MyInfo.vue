@@ -108,6 +108,38 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
+            <el-tab-pane label="登录日志" name="second">
+              <el-table :data="tableData" style="width: 100%" height="300">
+                </el-table-column>
+                <el-table-column prop="requestIp" label="请求IP" width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="time"
+                  label="登陆时间"
+                  sortable
+                  width="180"
+                  :formatter="dateFormat"
+                >
+                </el-table-column>
+                <el-table-column prop="address" label="登录地址" width="180">
+                </el-table-column>
+                <el-table-column prop="browser" label="浏览器" width="180">
+                </el-table-column>
+              </el-table>
+              <!-- 分页 -->
+              <div class="page">
+                <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page="queryInfo.pageNum"
+                  :page-sizes="[5, 10, 20, 30]"
+                  :page-size="queryInfo.pageSize"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="total"
+                >
+                </el-pagination>
+              </div>
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -119,7 +151,7 @@
 <script>
 import myUpload from "vue-image-crop-upload";
 import updatePass from "./modal/updatePass";
-import { updateUser, getInfo } from "@/api/manage";
+import { updateUser, getInfo, getLog } from "@/api/manage";
 import { isvalidPhone } from "@/utils/validate";
 import Avatar from "@/assets/avatar.png";
 import store from "@/store";
@@ -143,6 +175,12 @@ export default {
       activeName: "first",
       Avatar: Avatar,
       form: {},
+      total: 0,
+      queryInfo: {
+        pageNum: 1,
+        pageSize: 5
+      },
+      tableData: [],
       deptName: "",
       roleName: "",
       saveLoading: false,
@@ -160,6 +198,15 @@ export default {
     };
   },
   methods: {
+    //时间格式化
+    dateFormat: function(row, column) {
+      var date = row[column.property];
+      var moment = require("moment");
+      if (date == undefined) {
+        return "";
+      }
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    },
     //获取用户相关信息
     GetInfo() {
       const that = this;
@@ -215,6 +262,27 @@ export default {
           }
         });
       }
+    },
+    //监听pagesize改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.pageSize = newSize;
+      this.getLog();
+    },
+    //监听页码值改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.pageNum = newPage;
+      this.getLog();
+    },
+    async getLog() {
+      const that = this;
+      await getLog(this.queryInfo).then(resp => {
+        if (resp.code == 200) {
+          that.tableData = resp.result.list;
+          that.total = resp.result.total;
+        } else {
+          that.$message.warning(resp.message);
+        }
+      });
     }
   },
   computed: {
@@ -224,6 +292,7 @@ export default {
   },
   created() {
     this.GetInfo();
+    this.getLog();
     console.log(this.userInfo);
   }
 };
@@ -249,5 +318,10 @@ export default {
       color: #317ef3;
     }
   }
+}
+
+.page {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

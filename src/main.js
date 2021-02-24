@@ -9,6 +9,7 @@ import Blob from "./excel/Blob.js";
 import Export2Excel from "./excel/Export2Excel.js";
 import { getMenu, getAuth } from "@/api/manage";
 import "element-ui/lib/theme-chalk/index.css";
+import './icons'
 
 Vue.use(ElementUI);
 import "./assets/css/global.css";

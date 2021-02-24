@@ -18,6 +18,17 @@ const api = {
   getCharts1: "/user/charts",
   getCharts2: "/user/charts2",
   getCharts3: "/user/charts3",
+  getLog: "/log/userLog",
+  leaveApply: "/leave/apply",
+  //管理员查看所有记录
+  getLeaveRecord: "/leave/record",
+  //普通用户查看自己的记录
+  getMyRecord: "/leave/myRecord",
+  //经理查看部门下的记录
+  getDeptRecord: "/leave/deptRecord",
+  handlePass: "/leave/pass",
+  handleNoPass: "/leave/noPass",
+  handleDeleteLeave: "/leave/delete",
   service: "/service",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
@@ -33,7 +44,7 @@ export function addUser(parameter) {
   });
 }
 
-//增加员工
+//删除员工
 export function deleteUser(parameter) {
   return request({
     url: api.deleteUser,
@@ -41,8 +52,6 @@ export function deleteUser(parameter) {
     data: parameter
   });
 }
-
-//删除员工
 
 //修改员工
 export function updateUser(parameter) {
@@ -168,6 +177,78 @@ export function getCharts3() {
   return request({
     url: api.getCharts3,
     method: "get"
+  });
+}
+
+//获取用户的操作日志
+export function getLog(parameter) {
+  return request({
+    url: api.getLog,
+    method: "get",
+    params: parameter
+  });
+}
+
+//请假申请
+export function leaveApply(parameter) {
+  return request({
+    url: api.leaveApply,
+    method: "post",
+    data: parameter
+  });
+}
+
+//获取所有请假记录
+export function getLeaveRecord(parameter) {
+  return request({
+    url: api.getLeaveRecord,
+    method: "get",
+    params: parameter
+  });
+}
+
+//获取普通员工的请假记录
+export function getMyRecord(parameter) {
+  return request({
+    url: api.getMyRecord,
+    method: "get",
+    params: parameter
+  });
+}
+
+//获取部门下所有的请假记录
+export function getDeptRecord(parameter) {
+  return request({
+    url: api.getDeptRecord,
+    method: "get",
+    params: parameter
+  });
+}
+
+//通过员工申请请假
+export function handlePass(parameter) {
+  return request({
+    url: api.handlePass,
+    method: "post",
+    data: parameter
+  });
+}
+
+//删除员工申请请假
+export function handleDeleteLeave(parameter) {
+  return request({
+    url: api.handleDeleteLeave,
+    method: "post",
+    data: parameter
+  });
+}
+
+//不通过员工申请请假
+export function handleNoPass(parameter) {
+  return request({
+    url: api.handleNoPass,
+    method: "post",
+    data: parameter
   });
 }
 
