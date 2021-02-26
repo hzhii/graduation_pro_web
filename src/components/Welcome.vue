@@ -484,6 +484,8 @@ export default {
           that.total = resp.result.total;
           this.$message.success(resp.message);
         } else {
+          that.tableData = resp.result;
+          that.total = 0;
           this.$message.warning(resp.message);
         }
       });
