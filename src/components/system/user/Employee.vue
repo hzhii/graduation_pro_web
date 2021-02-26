@@ -56,7 +56,7 @@
               type="primary"
               icon="el-icon-download"
               @click="outExe()"
-              >档案导出</el-button
+              >导出excel</el-button
             >
           </div>
           <!-- 表格内容回显 -->
@@ -65,6 +65,7 @@
               :data="tableData"
               style="width: 100%"
               :default-sort="{ prop: 'date', order: 'descending' }"
+              v-loading="loading"
             >
               <el-table-column
                 prop="id"
@@ -126,6 +127,12 @@
                     @click="handleEdit(scope.row)"
                   >
                   </el-button>
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    icon="el-icon-download"
+                    @click="outWord(scope.row)"
+                  ></el-button>
                   <el-popconfirm
                     title="确定删除吗？"
                     @onConfirm="handleDelete(scope.row.id)"
@@ -304,6 +311,7 @@
 
 <script>
 import { isChinese, isvalidPhone, isNumber } from "@/utils/validate";
+
 import {
   queryUser,
   getRoleInfo,
@@ -316,6 +324,10 @@ import {
   updateUser,
   fuzzySearch
 } from "@/api/manage";
+import docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import JSZipUtils from "jszip-utils";
+import { saveAs } from "file-saver";
 export default {
   name: "Employee",
   data() {
@@ -359,6 +371,7 @@ export default {
     };
 
     return {
+      loading: true,
       show: false,
       noEdit: true,
       tableData: [],
@@ -409,6 +422,7 @@ export default {
       },
       allDept: [],
       allRole: [],
+      form: {},
       addTitle: "添加档案",
       editTitle: "修改档案"
     };
@@ -422,14 +436,18 @@ export default {
     },
     async getAllUser() {
       const that = this;
-      await queryUser(this.queryInfo).then(resp => {
-        if (resp.code == 200) {
-          that.tableData = resp.result.list;
-          that.total = resp.result.total;
-        } else {
-          that.$message.warning(resp.message);
-        }
-      });
+      await queryUser(this.queryInfo)
+        .then(resp => {
+          if (resp.code == 200) {
+            that.tableData = resp.result.list;
+            that.total = resp.result.total;
+          } else {
+            that.$message.warning(resp.message);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     // 性别转换
     formatRole: function(row, column) {
@@ -498,6 +516,8 @@ export default {
     },
     editClose() {
       this.editVisible = false;
+      this.editForm = this.form;
+      console.log("close", this.form);
     },
     handleAdd() {
       this.addVisible = true;
@@ -517,8 +537,10 @@ export default {
       console.log("record", record);
       this.getUserRole({ id: record.id });
       this.getUserDept({ id: record.id });
+      this.form = record;
       this.editVisible = true;
       this.editForm = record;
+      console.log("form", this.form);
     },
     //提交添加表单
     handleSubmit() {
@@ -634,6 +656,59 @@ export default {
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
+    },
+    outWord(record) {
+      let that = this;
+      // 读取并获得模板文件的二进制内容
+      JSZipUtils.getBinaryContent(
+        window.location.origin + "/static/mod.docx",
+        (error, content) => {
+          if (error) {
+            throw error;
+          }
+          // 创建一个PizZip实例，内容为模板的内容
+          let zip = new PizZip(content);
+          // 创建并加载docxtemplater实例对象
+          let doc = new docxtemplater().loadZip(zip);
+          // 设置模板变量的值
+          let docxData = {
+            time: "",
+            name: record.name,
+            sex: record.sex,
+            age: record.age,
+            depaName: record.deptName,
+            nameZh: record.nameZh,
+            telephone: record.telephone,
+            address: record.address
+          };
+          doc.setData({
+            ...docxData
+          });
+          try {
+            // 用模板变量的值替换所有模板变量
+            doc.render();
+          } catch (error) {
+            // 抛出异常
+            let e = {
+              message: error.message,
+              name: error.name,
+              stack: error.stack,
+              properties: error.properties
+            };
+            console.log(JSON.stringify({ error: e }));
+            throw error;
+          }
+
+          // 生成一个代表docxtemplater对象的zip文件（不是一个真实的文件，而是在内存中的表示）
+          let out = doc.getZip().generate({
+            type: "blob",
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          });
+          // 将目标文件对象保存为目标类型的文件，并命名
+          saveAs(out, record.name + "信息档案.docx");
+        }
+      );
     }
   },
   created() {

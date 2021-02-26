@@ -29,6 +29,14 @@ const api = {
   handlePass: "/leave/pass",
   handleNoPass: "/leave/noPass",
   handleDeleteLeave: "/leave/delete",
+  //添加公告
+  addAnno: "/anno/add",
+  getStaffAnno: "/anno/getStaffAnno",
+  getAnno: "/anno/getAnno",
+  deleteAnno: "/anno/delete",
+  getRubbish: "/anno/rubbish",
+  redo: "/anno/redo",
+  search: "/anno/search",
   service: "/service",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
@@ -249,6 +257,69 @@ export function handleNoPass(parameter) {
     url: api.handleNoPass,
     method: "post",
     data: parameter
+  });
+}
+
+//添加公告
+export function addAnno(parameter) {
+  return request({
+    url: api.addAnno,
+    method: "post",
+    data: parameter
+  });
+}
+
+//普通员工获取员工的所有的公告
+export function getStaffAnno(parameter) {
+  return request({
+    url: api.getStaffAnno,
+    method: "get",
+    params: parameter
+  });
+}
+
+//经理获取员工的所有的公告
+export function getAnno(parameter) {
+  return request({
+    url: api.getAnno,
+    method: "get",
+    params: parameter
+  });
+}
+
+//删除公告
+export function deleteAnno(parameter) {
+  return request({
+    url: api.deleteAnno,
+    method: "post",
+    data: parameter
+  });
+}
+
+//获取回收站信息
+export function getRubbish(parameter) {
+  return request({
+    url: api.getRubbish,
+    method: "get",
+    params: parameter
+  });
+}
+
+//删除公告
+export function redo(parameter) {
+  return request({
+    url: api.redo,
+    method: "post",
+    data: parameter
+  });
+}
+
+//区间查询公告
+export function search(parameter) {
+  return request({
+    url: api.search,
+    method: "get",
+    params: parameter
   });
 }
 
