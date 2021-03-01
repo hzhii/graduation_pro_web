@@ -136,7 +136,7 @@ export default {
       const myChart = echarts.init(this.$refs.chart3);
       myChart.setOption({
         title: {
-          text: "近6天登录人数",
+          text: "近7天登录人数",
           top: 20,
           left: "left"
         },

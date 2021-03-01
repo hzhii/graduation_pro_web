@@ -35,13 +35,6 @@ const router = new Router({
             requireAuth: true
           },
           component: () => import("@/components/Welcome")
-        },
-        {
-          path: "/system/info",
-          meta: {
-            requireAuth: true
-          },
-          component: () => import("@/components/MyInfo")
         }
       ]
     }

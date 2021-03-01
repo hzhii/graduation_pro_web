@@ -28,7 +28,7 @@
           </div>
           <!-- 操作按钮区域 -->
           <div class="button">
-            <el-button type="primary" @click="" icon="el-icon-edit"
+            <el-button type="primary" @click="handleAdd" icon="el-icon-edit"
               >添加部门档案</el-button
             >
           </div>
@@ -39,6 +39,18 @@
               style="width: 100%"
               :default-sort="{ prop: 'date', order: 'descending' }"
             >
+              <el-table-column prop="deptName" label="部门名称">
+              </el-table-column>
+              <el-table-column prop="deptInfo" label="部门介绍">
+              </el-table-column>
+              <el-table-column
+                prop="createTime"
+                label="成立时间"
+                :formatter="dateFormat"
+              >
+              </el-table-column>
+              <el-table-column prop="deptPhone" label="内部座机">
+              </el-table-column>
               <el-table-column
                 label="操作"
                 width="180"
@@ -51,10 +63,13 @@
                     type="primary"
                     icon="el-icon-edit"
                     size="mini"
-                    @click=""
+                    @click="handleEdit(scope.row)"
                   >
                   </el-button>
-                  <el-popconfirm title="确定删除吗？" @onConfirm="">
+                  <el-popconfirm
+                    title="确定删除吗？"
+                    @onConfirm="handleDelete(scope.row)"
+                  >
                     <el-button
                       type="danger"
                       icon="el-icon-delete"
@@ -92,12 +107,20 @@
     >
       <el-form
         ref="addFormRef"
-        :inline="true"
         :model="addForm"
         :rules="rules"
-        size="small"
-        label-width="66px"
+        :label-position="labelPosition"
+        label-width="40px"
       >
+        <el-form-item label="部门名称" prop="username">
+          <el-input v-model="addForm.deptName" />
+        </el-form-item>
+        <el-form-item label="部门介绍" prop="deptInfo">
+          <el-input v-model="addForm.deptInfo" type="textarea" />
+        </el-form-item>
+        <el-form-item label="内部电话" prop="deptPhone">
+          <el-input v-model="addForm.deptPhone" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="addClose">取消</el-button>
@@ -114,13 +137,30 @@
     >
       <el-form
         ref="editFormRef"
-        :inline="true"
         :model="editForm"
         :rules="editRules"
-        size="small"
-        label-width="66px"
+        :label-position="labelPosition"
+        label-width="40px"
       >
+        <el-form-item label="部门名称" prop="username">
+          <el-input v-model="editForm.deptName" />
+        </el-form-item>
+        <el-form-item label="部门介绍" prop="deptInfo">
+          <el-input v-model="editForm.deptInfo" type="textarea" />
+        </el-form-item>
+        <el-form-item label="成立时间" prop="createTime">
+          <el-date-picker
+            v-model="editForm.createTime"
+            :readonly="noEdit"
+            type="datetime"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="内部电话" prop="deptPhone">
+          <el-input v-model="editForm.deptPhone" />
+        </el-form-item>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="editClose">取消</el-button>
         <el-button type="primary" @click="editSubmit">确认</el-button>
@@ -130,9 +170,24 @@
 </template>
 
 <script>
+import { getDeptInfo, addDept, editDept, deleteDept } from "@/api/manage";
+import { isDeptPhone } from "@/utils/validate";
+import moment from "moment";
 export default {
   data() {
+    // 自定义验证
+    const validPhone = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输内部联系方式"));
+      } else if (!isDeptPhone(value)) {
+        callback(new Error("请输入正确座机号码"));
+      } else {
+        callback();
+      }
+    };
+
     return {
+      labelPosition: "top",
       noEdit: true,
       queryInfo: {
         query: "",
@@ -143,8 +198,24 @@ export default {
       total: 0,
       addForm: {},
       editForm: {},
-      rules: {},
-      editRules: {},
+      rules: {
+        deptName: [
+          { required: true, message: "请输入部门名称", trigger: "blur" }
+        ],
+        deptInfo: [
+          { required: true, trigger: "blur", message: "请输入部门介绍" }
+        ],
+        deptPhone: [{ required: true, trigger: "blur", validator: validPhone }]
+      },
+      editRules: {
+        deptName: [
+          { required: true, message: "请输入部门名称", trigger: "blur" }
+        ],
+        deptInfo: [
+          { required: true, trigger: "blur", message: "请输入部门介绍" }
+        ],
+        deptPhone: [{ required: true, trigger: "blur", validator: validPhone }]
+      },
       addTitle: "添加档案",
       editTitle: "修改档案",
       editVisible: false,
@@ -155,18 +226,18 @@ export default {
     //监听pagesize改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.pageSize = newSize;
-      this.getAllUser();
+      this.getAllDept();
     },
     //监听页码值改变的事件
     handleCurrentChange(newPage) {
       this.queryInfo.pageNum = newPage;
-      this.getAllUser();
+      this.getAllDept();
     },
     addClose() {
       this.addVisible = false;
-      this.addForm.role = "";
-      this.addForm.dep = "";
-      this.addForm.sex = "";
+      this.addForm.deptName = "";
+      this.addForm.deptInfo = "";
+      this.addForm.deptPhone = "";
       this.$refs.addFormRef.resetFields();
     },
     editClose() {
@@ -177,10 +248,10 @@ export default {
     },
     handleDelete(record) {
       const that = this;
-      deleteUser({ id: record }).then(resp => {
+      deleteDept(record).then(resp => {
         if (resp.code == 200) {
           this.$message.success("删除成功");
-          that.getAllUser();
+          that.getAllDept();
         } else {
           this.$message.error("系统异常,请稍后再试");
         }
@@ -188,15 +259,71 @@ export default {
     },
     handleEdit(record) {
       console.log("record", record);
-      this.getUserRole({ id: record.id });
-      this.getUserDept({ id: record.id });
       this.editVisible = true;
       this.editForm = record;
     },
+    getAllDept() {
+      const that = this;
+      getDeptInfo(this.queryInfo)
+        .then(resp => {
+          if (resp.code == 200) {
+            that.tableData = resp.result.list;
+            that.total = resp.result.total;
+          } else {
+            that.$message.warning(resp.result.message);
+          }
+        })
+        .catch(error => {
+          this.$message.warning("系统异常，请稍后重试");
+          console.log(error);
+        });
+    },
+    dateFormat: function(row, column) {
+      var date = row[column.property];
+      if (date === undefined) {
+        return "";
+      }
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    },
     //提交添加表单
-    handleSubmit() {},
+    handleSubmit() {
+      const that = this;
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return;
+        addDept(this.addForm).then(resp => {
+          if (resp.code == 200) {
+            this.$message.success("添加成功");
+            this.getAllDept();
+          }
+        });
+      });
+      that.addClose();
+    },
     //提交修改表单
-    editSubmit() {}
+    editSubmit() {
+      const that = this;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return;
+        //发起添加的网络请求
+        await editDept(this.editForm)
+          .then(response => {
+            if (response.code == 200) {
+              this.$message.success("修改成功");
+              this.getAllDept();
+            } else {
+              this.$message.error(response.message);
+            }
+          })
+          .catch(error => {
+            this.$message.warning("系统异常，请稍后重试");
+            console.log(error);
+          });
+        that.editClose();
+      });
+    }
+  },
+  created() {
+    this.getAllDept();
   }
 };
 </script>

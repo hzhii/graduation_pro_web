@@ -7,7 +7,6 @@ const api = {
   getMenu: "/menu/userMenu",
   auth: "/menu/authentication",
   getRoleInfo: "/role/getAllRole",
-  getDeptInfo: "/dept/getAllDept",
   getUserRole: "/role/getUserRole",
   getUserDept: "/dept/getUserDept",
   vaildUserName: "/user/vaildUserName",
@@ -37,6 +36,11 @@ const api = {
   getRubbish: "/anno/rubbish",
   redo: "/anno/redo",
   search: "/anno/search",
+  //部门相关
+  getDeptInfo: "/dept/getAllDept",
+  addDept: "/dept/add",
+  editDept: "/dept/edit",
+  deleteDept: "/dept/delete",
   service: "/service",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
@@ -139,10 +143,38 @@ export function getUserDept(parameter) {
 }
 
 //查询所有部门信息
-export function getDeptInfo() {
+export function getDeptInfo(parameter) {
   return request({
     url: api.getDeptInfo,
-    method: "get"
+    method: "get",
+    params: parameter
+  });
+}
+
+//添加部门信息
+export function addDept(parameter) {
+  return request({
+    url: api.addDept,
+    method: "post",
+    data: parameter
+  });
+}
+
+//删除部门信息
+export function deleteDept(parameter) {
+  return request({
+    url: api.deleteDept,
+    method: "post",
+    data: parameter
+  });
+}
+
+//修改部门信息
+export function editDept(parameter) {
+  return request({
+    url: api.editDept,
+    method: "post",
+    data: parameter
   });
 }
 

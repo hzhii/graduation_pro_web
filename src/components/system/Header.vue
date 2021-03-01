@@ -25,7 +25,7 @@
             {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <router-link to="/system/info">
+            <router-link to="/system/center">
               <el-dropdown-item icon="el-icon-user">个人信息</el-dropdown-item>
             </router-link>
             <el-dropdown-item

@@ -77,17 +77,27 @@
               </el-table-column>
               <el-table-column prop="name" label="姓名" sortable width="180">
               </el-table-column>
-              <el-table-column
-                prop="username"
-                label="用户名"
-                sortable
-                width="180"
-              >
+              <el-table-column prop="username" label="用户名" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="姓名" sortable width="180">
+              </el-table-column>
+              <el-table-column prop="avaterName" label="头像" width="180">
+                <template slot-scope="scope">
+                  <img
+                    :src="
+                      scope.row.avaterName
+                        ? 'http://localhost:8080' +
+                          '/avatar/' +
+                          scope.row.avaterName
+                        : Avatar
+                    "
+                    style="width:30px;height:30px"
+                  />
+                </template>
               </el-table-column>
               <el-table-column
                 prop="sex"
                 label="性别"
-                sortable
                 width="180"
                 :formatter="formatRole"
               >
@@ -96,12 +106,7 @@
               </el-table-column>
               <el-table-column prop="address" label="地址" sortable width="180">
               </el-table-column>
-              <el-table-column
-                prop="telephone"
-                label="联系电话"
-                sortable
-                width="180"
-              >
+              <el-table-column prop="telephone" label="联系电话" width="180">
               </el-table-column>
               <el-table-column prop="nameZh" label="角色" sortable width="180">
               </el-table-column>
@@ -311,7 +316,7 @@
 
 <script>
 import { isChinese, isvalidPhone, isNumber } from "@/utils/validate";
-
+import Avatar from "@/assets/avatar.png";
 import {
   queryUser,
   getRoleInfo,
@@ -373,6 +378,7 @@ export default {
     return {
       loading: true,
       show: false,
+      Avatar: Avatar,
       noEdit: true,
       tableData: [],
       excelData: [],

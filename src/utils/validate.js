@@ -79,6 +79,11 @@ export function isNumber(number) {
   return reg.test(number);
 }
 
+export function isDeptPhone(number) {
+  const reg = /0\d{2}-\d{7,8}/;
+  return reg.test(number);
+}
+
 /**
  * @param {string} str
  * @returns {Boolean}
