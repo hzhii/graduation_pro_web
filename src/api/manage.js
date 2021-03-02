@@ -6,7 +6,7 @@ const api = {
   getInfo: "/user/info",
   getMenu: "/menu/userMenu",
   auth: "/menu/authentication",
-  getRoleInfo: "/role/getAllRole",
+  getRoleInfo: "/role/allRole",
   getUserRole: "/role/getUserRole",
   getUserDept: "/dept/getUserDept",
   vaildUserName: "/user/vaildUserName",
@@ -37,10 +37,17 @@ const api = {
   redo: "/anno/redo",
   search: "/anno/search",
   //部门相关
-  getDeptInfo: "/dept/getAllDept",
+  getDeptInfo: "/dept/allDept",
   addDept: "/dept/add",
   editDept: "/dept/edit",
   deleteDept: "/dept/delete",
+  //获取角色所拥有的菜单
+  getRolesMenu: "/menu/getRoleMenu",
+  getAllRoleInfo: "/role/getAllRole",
+  //添加角色信息
+  addRole: "/roleMenu/add",
+  deleteRole: "/role/deleteRole",
+  editRole: "/roleMenu/edit",
   service: "/service",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
@@ -352,6 +359,51 @@ export function search(parameter) {
     url: api.search,
     method: "get",
     params: parameter
+  });
+}
+
+//查询树的结构用于编辑角色所拥有的菜单
+export function getRoleMenu(parameter) {
+  return request({
+    url: api.getRolesMenu,
+    method: "get",
+    params: parameter
+  });
+}
+
+//获取所有的角色信息
+export function getAllRoleInfo(parameter) {
+  return request({
+    url: api.getAllRoleInfo,
+    method: "get",
+    params: parameter
+  });
+}
+
+//添加角色信息
+export function addRole(parameter) {
+  return request({
+    url: api.addRole,
+    method: "post",
+    data: parameter
+  });
+}
+
+//删除角色信息
+export function deleteRole(parameter) {
+  return request({
+    url: api.deleteRole,
+    method: "post",
+    data: parameter
+  });
+}
+
+//修改角色信息
+export function editRole(parameter) {
+  return request({
+    url: api.editRole,
+    method: "post",
+    data: parameter
   });
 }
 
