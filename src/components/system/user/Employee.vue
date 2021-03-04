@@ -129,6 +129,7 @@
                     type="primary"
                     icon="el-icon-edit"
                     size="mini"
+                    v-has="'edit'"
                     @click="handleEdit(scope.row)"
                   >
                   </el-button>

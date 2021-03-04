@@ -83,6 +83,7 @@ export default {
               _this.$store.commit("setId", response.result.info.id);
               _this.$store.commit("setToken", response.result.token);
               _this.$store.commit("setUser", response.result.info);
+              _this.$store.commit("setPerms", response.result.perms);
               _this.$notify({
                 title: "登陆成功!",
                 message: "欢迎回来~",

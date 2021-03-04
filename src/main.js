@@ -9,9 +9,10 @@ import Blob from "./excel/Blob.js";
 import Export2Excel from "./excel/Export2Excel.js";
 import { getMenu, getAuth } from "@/api/manage";
 import "element-ui/lib/theme-chalk/index.css";
-import './icons'
-
+import "./icons";
+import { directive } from "./utils/directive";
 Vue.use(ElementUI);
+directive();
 import "./assets/css/global.css";
 
 Vue.config.productionTip = false;

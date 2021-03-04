@@ -108,6 +108,16 @@
         <el-form-item label="中文名称" label-width="120px" prop="nameZh">
           <el-input v-model="addForm.nameZh" />
         </el-form-item>
+        <el-form-item label="功能配置" label-width="120px" prop="permissions">
+          <el-checkbox-group v-model="addForm.checkList">
+            <el-checkbox label="add">新增权限</el-checkbox>
+            <el-checkbox label="deleted">删除权限</el-checkbox>
+            <el-checkbox label="edit">修改权限</el-checkbox>
+            <el-checkbox label="query">查询权限</el-checkbox>
+            <el-checkbox label="outExcel">导出EXCEL</el-checkbox>
+            <el-checkbox label="outWord">导出WORD</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
         <el-form-item label="菜单配置" label-width="120px" prop="menus">
           <el-tree
             :data="menus"
@@ -137,7 +147,6 @@
         :inline="true"
         :model="editForm"
         :rules="editRules"
-        size="small"
         label-width="66px"
       >
         <el-form-item label="角色编号" label-width="120px" prop="roleId">
@@ -149,10 +158,21 @@
         <el-form-item label="中文名称" label-width="120px" prop="nameZh">
           <el-input v-model="editForm.nameZh" />
         </el-form-item>
+        <el-form-item label="功能配置" label-width="120px" prop="permissions">
+          <el-checkbox-group v-model="editForm.checkList">
+            <el-checkbox label="add">新增权限</el-checkbox>
+            <el-checkbox label="deleted">删除权限</el-checkbox>
+            <el-checkbox label="edit">修改权限</el-checkbox>
+            <el-checkbox label="query">查询权限</el-checkbox>
+            <el-checkbox label="outExcel">导出EXCEL</el-checkbox>
+            <el-checkbox label="outWord">导出WORD</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
         <el-form-item label="菜单配置" label-width="120px" prop="menus">
           <el-tree
             :data="menus"
             :props="props"
+            :check-strictly="systemNodeFlag"
             show-checkbox
             :default-checked-keys="selectedMenusIds"
             node-key="id"
@@ -185,6 +205,7 @@ export default {
         pageNum: 1,
         pageSize: 5
       },
+      systemNodeFlag: true,
       tableData: [],
       //修改的时候显示的选中了的菜单
       selectedMenusIds: [],
@@ -194,10 +215,12 @@ export default {
       addForm: {
         name: "",
         nameZh: "",
-        menusId: []
+        menusId: [],
+        checkList: []
       },
       editForm: {
-        menusId: []
+        menusId: [],
+        checkList: []
       },
       rules: {
         name: [{ required: true, message: "请输入英文编码", trigger: "blur" }],
@@ -233,6 +256,7 @@ export default {
       this.addVisible = false;
       this.addForm.name = "";
       this.addForm.nameZh = "";
+      this.addForm.checkList = [];
       this.$refs.tree1.setCheckedKeys([]);
       this.$refs.addFormRef.resetFields();
     },
@@ -252,9 +276,15 @@ export default {
         }
       });
     },
-    handleEdit(record) {
+    async handleEdit(record) {
       this.editForm = record;
-      this.getUserRoleMenu();
+      console.log(record);
+      if (record.permissions != null) {
+        this.$set(this.editForm, "checkList", record.permissions.split(","));
+      } else {
+        this.$set(this.editForm, "checkList", []);
+      }
+      await this.getUserRoleMenu();
       this.editVisible = true;
     },
     //提交添加表单

@@ -37,7 +37,7 @@ const api = {
   redo: "/anno/redo",
   search: "/anno/search",
   //部门相关
-  getDeptInfo: "/dept/allDept",
+  getDeptInfo: "/dept/getAllDept",
   addDept: "/dept/add",
   editDept: "/dept/edit",
   deleteDept: "/dept/delete",

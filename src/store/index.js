@@ -23,7 +23,10 @@ export default new Vuex.Store({
         ? ""
         : JSON.parse(window.localStorage.getItem("user" || "[]")),
     userMenus: [],
-    permissions: []
+    permissions:
+      window.localStorage.getItem("permissions") == null
+        ? ""
+        : JSON.parse(window.localStorage.getItem("permissions" || "[]"))
   },
   mutations: {
     initMenu(state, menus) {
@@ -46,6 +49,7 @@ export default new Vuex.Store({
       window.localStorage.removeItem("id");
       window.localStorage.removeItem("token");
       window.localStorage.removeItem("user");
+      window.localStorage.removeItem("permissions");
       state.userMenus = [];
       state.permissions = [];
     },
@@ -60,6 +64,10 @@ export default new Vuex.Store({
     setUser(state, data) {
       state.user = data;
       window.localStorage.setItem("user", JSON.stringify(data));
+    },
+    setPerms(state, data) {
+      state.permissions = data;
+      window.localStorage.setItem("permissions", JSON.stringify(data));
     }
   },
   actions: {
