@@ -5,8 +5,11 @@
       <span>档案信息管理系统</span>
     </div>
     <div class="box">
+      <div class="time" style="font-size: 15px">
+        {{ nowTime }}
+      </div>
       <!-- 头像 -->
-      <div class="head">
+      <div class="test">
         <img
           :src="
             this.$store.state.user.avaterName
@@ -18,24 +21,19 @@
           class="user-avatar"
         />
       </div>
-      <!-- 登录姓名 -->
-      <div class="name">
-        <el-dropdown>
-          <span class="el-dropdown-link" style="color: #fff">
-            {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <router-link to="/system/center">
-              <el-dropdown-item icon="el-icon-user">个人信息</el-dropdown-item>
-            </router-link>
-            <el-dropdown-item
-              icon="el-icon-switch-button"
-              @click.native="warn()"
-              >注销登录
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
+      <el-dropdown>
+        <span class="el-dropdown-link" style="color: #fff">
+          {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <router-link to="/system/center">
+            <el-dropdown-item icon="el-icon-user">个人信息</el-dropdown-item>
+          </router-link>
+          <el-dropdown-item icon="el-icon-switch-button" @click.native="warn()"
+            >注销登录
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -48,7 +46,8 @@ export default {
   name: "Header",
   data() {
     return {
-      Avatar: Avatar
+      Avatar: Avatar,
+      nowTime: ""
     };
   },
   computed: {
@@ -82,7 +81,55 @@ export default {
             message: "已取消退出"
           });
         });
+    },
+    timeFormate(timeStamp) {
+      let year = new Date(timeStamp).getFullYear();
+      let month =
+        new Date(timeStamp).getMonth() + 1 < 10
+          ? "0" + (new Date(timeStamp).getMonth() + 1)
+          : new Date(timeStamp).getMonth() + 1;
+      let date =
+        new Date(timeStamp).getDate() < 10
+          ? "0" + new Date(timeStamp).getDate()
+          : new Date(timeStamp).getDate();
+      let hh =
+        new Date(timeStamp).getHours() < 10
+          ? "0" + new Date(timeStamp).getHours()
+          : new Date(timeStamp).getHours();
+      let mm =
+        new Date(timeStamp).getMinutes() < 10
+          ? "0" + new Date(timeStamp).getMinutes()
+          : new Date(timeStamp).getMinutes();
+      let ss =
+        new Date(timeStamp).getSeconds() < 10
+          ? "0" + new Date(timeStamp).getSeconds()
+          : new Date(timeStamp).getSeconds();
+      this.nowTime =
+        year +
+        "年" +
+        month +
+        "月" +
+        date +
+        "日" +
+        " " +
+        hh +
+        ":" +
+        mm +
+        ":" +
+        ss;
+    },
+    nowTimes() {
+      this.timeFormate(new Date());
+      setInterval(this.nowTimes, 1000);
+      this.clear();
+    },
+    clear() {
+      clearInterval(this.nowTimes);
+      this.nowTimes = null;
     }
+  },
+  created() {
+    this.nowTimes();
   }
 };
 </script>
@@ -92,14 +139,13 @@ export default {
   width: 100%;
   position: relative;
   .box {
-    display: flex;
-    position: absolute;
-    left: 90%;
-    .name {
-      margin: 0 15px;
-    }
+    display: inline;
+    margin: auto;
+    float: right;
+    text-align: right;
+    margin-right: 0;
     > div {
-      display: flex;
+      display: inline;
       align-items: center;
     }
   }

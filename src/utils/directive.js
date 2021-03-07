@@ -7,9 +7,12 @@ export function directive() {
   Vue.directive("has", {
     bind(el, binding) {
       // 一行三目运算符就可
-      !store.state.permissions.includes(binding.value)
-        ? el.parentNode.removeChild(el)
-        : {};
+      let flag = store.state.permissions.includes(binding.value);
+      if (flag) {
+        el.style.display = "inline-block";
+      } else {
+        el.style.display = "none";
+      }
     }
   });
 }

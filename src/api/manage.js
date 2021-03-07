@@ -18,6 +18,7 @@ const api = {
   getCharts2: "/user/charts2",
   getCharts3: "/user/charts3",
   getLog: "/log/userLog",
+  //请假相关
   leaveApply: "/leave/apply",
   //管理员查看所有记录
   getLeaveRecord: "/leave/record",
@@ -37,7 +38,7 @@ const api = {
   redo: "/anno/redo",
   search: "/anno/search",
   //部门相关
-  getDeptInfo: "/dept/getAllDept",
+  getDeptInfo: "/dept/allDept",
   addDept: "/dept/add",
   editDept: "/dept/edit",
   deleteDept: "/dept/delete",
@@ -49,6 +50,17 @@ const api = {
   deleteRole: "/role/deleteRole",
   editRole: "/roleMenu/edit",
   service: "/service",
+  //获取城市相关json信息
+  getAddressJson: "http://localhost:8088/static/districts.json",
+  //出差相关
+  getAllOutRecord: "/out/getAllOutRecord",
+  getMyOutRecord: "/out/getMyOutRecord",
+  getDeptOutRecord: "/out/getDeptOutRecord",
+  addOutRecord: "/out/add",
+  deleteOutRecord: "/out/delete",
+  passOutRecord: "/out/pass",
+  failOutRecord: "/out/fail",
+  outSearch: "/out/search",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
   info: "/api/getUserById"
@@ -402,6 +414,87 @@ export function deleteRole(parameter) {
 export function editRole(parameter) {
   return request({
     url: api.editRole,
+    method: "post",
+    data: parameter
+  });
+}
+
+//获取级联选择器地址信息
+export function getAddressJson(parameter) {
+  return request({
+    url: api.getAddressJson,
+    method: "get",
+    params: parameter
+  });
+}
+
+//获取所有出差记录
+export function getAllOutRecord(parameter) {
+  return request({
+    url: api.getAllOutRecord,
+    method: "get",
+    params: parameter
+  });
+}
+
+//获取自己的出差记录
+export function getMyOutRecord(parameter) {
+  return request({
+    url: api.getMyOutRecord,
+    method: "get",
+    params: parameter
+  });
+}
+
+//获取部门的出差记录
+export function getDeptOutRecord(parameter) {
+  return request({
+    url: api.getDeptOutRecord,
+    method: "get",
+    params: parameter
+  });
+}
+
+//添加出差记录
+export function addOutRecord(parameter) {
+  return request({
+    url: api.addOutRecord,
+    method: "post",
+    data: parameter
+  });
+}
+
+//删除出差记录
+export function deleteOutRecord(parameter) {
+  return request({
+    url: api.deleteOutRecord,
+    method: "post",
+    data: parameter
+  });
+}
+
+//同意申请
+export function passOutRecord(parameter) {
+  return request({
+    url: api.passOutRecord,
+    method: "post",
+    data: parameter
+  });
+}
+
+//不同意申请
+export function failOutRecord(parameter) {
+  return request({
+    url: api.failOutRecord,
+    method: "post",
+    data: parameter
+  });
+}
+
+//综合查询
+export function outSearch(parameter) {
+  return request({
+    url: api.outSearch,
     method: "post",
     data: parameter
   });

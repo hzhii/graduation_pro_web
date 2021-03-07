@@ -11,6 +11,8 @@ import { getMenu, getAuth } from "@/api/manage";
 import "element-ui/lib/theme-chalk/index.css";
 import "./icons";
 import { directive } from "./utils/directive";
+import vueResource from "vue-resource";
+Vue.use(vueResource);
 Vue.use(ElementUI);
 directive();
 import "./assets/css/global.css";
@@ -90,7 +92,6 @@ const formatRoutes = routes => {
       children: route.children, // 子节点
       hidden: true
     };
-    console.log("maincomponent", fmtRoute.path);
     fmtRoutes.push(fmtRoute);
   });
   return fmtRoutes;

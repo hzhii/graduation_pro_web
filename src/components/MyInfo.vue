@@ -140,6 +140,16 @@
                 </el-pagination>
               </div>
             </el-tab-pane>
+            <el-tab-pane label="测试" name="third">
+                <el-timeline :reverse="reverse">
+    <el-timeline-item
+      v-for="(activity, index) in tableData"
+      :key="index"
+      :timestamp="formatTime(activity.time)">
+      {{activity.address}}
+    </el-timeline-item>
+  </el-timeline>
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -170,6 +180,7 @@ export default {
       }
     };
     return {
+      reverse: true,
       updateAvatarApi: "http://localhost:8080/upload/avatar",
       show: false,
       activeName: "first",
@@ -206,6 +217,13 @@ export default {
         return "";
       }
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    },
+    formatTime(value){
+ var moment = require("moment");
+ if (value == undefined) {
+        return "";
+      }
+      return moment(value).format("YYYY-MM-DD HH:mm:ss");
     },
     //获取用户相关信息
     GetInfo() {
