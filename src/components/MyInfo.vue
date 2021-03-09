@@ -88,8 +88,14 @@
                 <el-form-item label="姓名" prop="name">
                   <el-input v-model="form.name" style="width: 35%" />
                 </el-form-item>
+                <el-form-item label="年龄" prop="age">
+                  <el-input v-model="form.age" style="width: 35%" />
+                </el-form-item>
                 <el-form-item label="手机号" prop="telephone">
                   <el-input v-model="form.telephone" style="width: 35%;" />
+                </el-form-item>
+                <el-form-item label="地址" prop="address">
+                  <el-input v-model="form.address" style="width: 35%" />
                 </el-form-item>
                 <el-form-item label="性别">
                   <el-radio-group v-model="form.sex" style="width: 178px">
@@ -97,13 +103,19 @@
                     <el-radio label="0">女</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="">
+                <el-form-item label="操作">
                   <el-button
                     :loading="saveLoading"
                     size="mini"
                     type="primary"
                     @click="doSubmit"
                     >保存配置</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="outWord"
+                    >导出Word</el-button
                   >
                 </el-form-item>
               </el-form>
@@ -140,13 +152,17 @@
                 </el-pagination>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="测试" name="third">
+            <el-tab-pane label="近五次登录记录" name="third">
                 <el-timeline :reverse="reverse">
     <el-timeline-item
       v-for="(activity, index) in tableData"
       :key="index"
-      :timestamp="formatTime(activity.time)">
-      {{activity.address}}
+      placement="top"
+      >
+      <el-card>
+        <h4>{{activity.address}}</h4>
+        <p>登陆与于 {{formatTime(activity.time)}}</p>
+      </el-card>
     </el-timeline-item>
   </el-timeline>
             </el-tab-pane>
@@ -165,6 +181,10 @@ import { updateUser, getInfo, getLog } from "@/api/manage";
 import { isvalidPhone } from "@/utils/validate";
 import Avatar from "@/assets/avatar.png";
 import store from "@/store";
+import docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import JSZipUtils from "jszip-utils";
+import { saveAs } from "file-saver";
 
 export default {
   name: "myInfo",
@@ -201,7 +221,9 @@ export default {
           { required: true, message: "请输入用户昵称", trigger: "blur" },
           { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" }
         ],
-        telephone: [{ required: true, trigger: "blur", validator: validPhone }]
+        telephone: [{ required: true, trigger: "blur", validator: validPhone }],
+        address: [{ required: true, trigger: "blur",message:"请输入居住地址" }],
+        age: [{required: true, trigger: "blur",message:"年龄"}]
       },
       headers: {
         "Access-Token": this.$store.state.token
@@ -301,6 +323,59 @@ export default {
           that.$message.warning(resp.message);
         }
       });
+    },
+    outWord() {
+      let that = this;
+      // 读取并获得模板文件的二进制内容
+      JSZipUtils.getBinaryContent(
+        window.location.origin + "/static/mod.docx",
+        (error, content) => {
+          if (error) {
+            throw error;
+          }
+          // 创建一个PizZip实例，内容为模板的内容
+          let zip = new PizZip(content);
+          // 创建并加载docxtemplater实例对象
+          let doc = new docxtemplater().loadZip(zip);
+          // 设置模板变量的值
+          let docxData = {
+            time: "",
+            name: that.form.name,
+            sex: that.form.sex == "1" ? "男" : "女",
+            age: that.form.age,
+            depaName: that.deptName,
+            nameZh: that.roleName,
+            telephone: that.form.telephone,
+            address: that.form.address
+          };
+          doc.setData({
+            ...docxData
+          });
+          try {
+            // 用模板变量的值替换所有模板变量
+            doc.render();
+          } catch (error) {
+            // 抛出异常
+            let e = {
+              message: error.message,
+              name: error.name,
+              stack: error.stack,
+              properties: error.properties
+            };
+            console.log(JSON.stringify({ error: e }));
+            throw error;
+          }
+
+          // 生成一个代表docxtemplater对象的zip文件（不是一个真实的文件，而是在内存中的表示）
+          let out = doc.getZip().generate({
+            type: "blob",
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          });
+          // 将目标文件对象保存为目标类型的文件，并命名
+          saveAs(out, that.form.name + "信息档案.docx");
+        }
+      );
     }
   },
   computed: {

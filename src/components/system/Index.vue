@@ -3,15 +3,15 @@
     <el-header>
       <Header></Header>
     </el-header>
-  <el-container>
-    <el-aside width="200px">
-    <Menu></Menu>
-    </el-aside>
-    <el-main>
-      <!-- 路由占位符 -->
-      <router-view></router-view>
-    </el-main>
-  </el-container>
+    <el-container>
+      <el-aside width="200px">
+        <Menu></Menu>
+      </el-aside>
+      <el-main>
+        <!-- 路由占位符 -->
+        <router-view></router-view>
+      </el-main>
+    </el-container>
   </el-container>
 </template>
 
@@ -28,11 +28,11 @@ export default {
 
 <style lang="less" scoped>
 .el-header {
-  background-color: #373d41;
+  background-color: #7f9eb36b;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
+  color: black;
   font-size: 20px;
 
   > div {
@@ -46,7 +46,7 @@ export default {
 }
 
 .el-aside {
-  background-color:#373d41;
+  background-color: #304156;
 
   .el-menu {
     border-right: none;
@@ -55,6 +55,7 @@ export default {
 
 .el-main {
   background-color: #eaedf1;
+  background-image: url();
 }
 
 .home-container {

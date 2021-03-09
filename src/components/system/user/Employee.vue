@@ -22,7 +22,7 @@
         <!-- 主体内容 -->
         <div class="main">
           <!-- 查询区域 -->
-          <div class="search">
+          <div class="search" v-has="'query'">
             <el-form :inline="true" :model="queryInfo" class="demo-form-inline">
               <el-form-item label="姓名:">
                 <el-input
@@ -48,7 +48,11 @@
           </div>
           <!-- 操作按钮区域 -->
           <div class="button">
-            <el-button type="primary" @click="handleAdd" icon="el-icon-edit"
+            <el-button
+              type="primary"
+              @click="handleAdd"
+              icon="el-icon-edit"
+              v-has="'add'"
               >添加员工档案</el-button
             >
             <el-button
@@ -56,6 +60,7 @@
               type="primary"
               icon="el-icon-download"
               @click="outExe()"
+              v-has="'outExcel'"
               >导出excel</el-button
             >
           </div>
@@ -67,6 +72,27 @@
               :default-sort="{ prop: 'date', order: 'descending' }"
               v-loading="loading"
             >
+              <el-table-column type="expand">
+                <template slot-scope="props">
+                  <el-form
+                    label-position="left"
+                    inline
+                    class="demo-table-expand"
+                  >
+                    <el-form-item label="年龄:">
+                      <span v-has="'query'">{{ props.row.age }}</span>
+                    </el-form-item>
+                    <br />
+                    <el-form-item label="地址:">
+                      <span v-has="'query'">{{ props.row.address }}</span>
+                    </el-form-item>
+                    <br />
+                    <el-form-item label="联系方式:">
+                      <span v-has="'query'">{{ props.row.telephone }}</span>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </el-table-column>
               <el-table-column
                 prop="id"
                 label="id"
@@ -78,8 +104,6 @@
               <el-table-column prop="name" label="姓名" sortable width="180">
               </el-table-column>
               <el-table-column prop="username" label="用户名" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="姓名" sortable width="180">
               </el-table-column>
               <el-table-column prop="avaterName" label="头像" width="180">
                 <template slot-scope="scope">
@@ -101,12 +125,6 @@
                 width="180"
                 :formatter="formatRole"
               >
-              </el-table-column>
-              <el-table-column prop="age" label="年龄" sortable width="180">
-              </el-table-column>
-              <el-table-column prop="address" label="地址" sortable width="180">
-              </el-table-column>
-              <el-table-column prop="telephone" label="联系电话" width="180">
               </el-table-column>
               <el-table-column prop="nameZh" label="角色" sortable width="180">
               </el-table-column>
@@ -137,6 +155,7 @@
                     type="primary"
                     size="mini"
                     icon="el-icon-download"
+                    v-has="'outWord'"
                     @click="outWord(scope.row)"
                   ></el-button>
                   <el-popconfirm
@@ -148,6 +167,7 @@
                       icon="el-icon-delete"
                       size="mini"
                       slot="reference"
+                      v-has="'deleted'"
                     ></el-button>
                   </el-popconfirm>
                 </template>
@@ -681,7 +701,7 @@ export default {
           let docxData = {
             time: "",
             name: record.name,
-            sex: record.sex,
+            sex: record.sex == "1" ? "男" : "女",
             age: record.age,
             depaName: record.deptName,
             nameZh: record.nameZh,

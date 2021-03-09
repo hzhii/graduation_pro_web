@@ -12,6 +12,8 @@ import "element-ui/lib/theme-chalk/index.css";
 import "./icons";
 import { directive } from "./utils/directive";
 import vueResource from "vue-resource";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 Vue.use(vueResource);
 Vue.use(ElementUI);
 directive();
@@ -19,13 +21,15 @@ import "./assets/css/global.css";
 
 Vue.config.productionTip = false;
 // 路由守航
+const Welcome = "/system/welcome";
 router.beforeEach((to, from, next) => {
+  NProgress.start();
   if (store.state.username) {
     initMenu(router, store);
   }
   if (store.state.username && to.path.startsWith("/login")) {
     next({
-      name: "Welcome"
+      path: Welcome
     });
   }
   // 如果前端没有登录信息则直接拦截，如果有则判断后端是否正常登录（防止构造参数绕过）
@@ -34,6 +38,7 @@ router.beforeEach((to, from, next) => {
       getAuth().then(resp => {
         if (resp) {
           next();
+          NProgress.done();
         }
       });
     } else {
@@ -41,10 +46,15 @@ router.beforeEach((to, from, next) => {
         path: "login",
         query: { redirect: to.fullPath }
       });
+      NProgress.done();
     }
   } else {
     next();
   }
+});
+
+router.afterEach(() => {
+  NProgress.done(); // finish progress bar
 });
 
 const initMenu = (router, store) => {

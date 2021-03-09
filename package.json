@@ -21,6 +21,8 @@
     "less-loader": "^4.1.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
+    "nprogress": "^0.2.0",
+    "open-docxtemplater-image-module": "^1.0.3",
     "vue": "^2.5.2",
     "vue-image-crop-upload": "^2.5.0",
     "vue-resource": "^1.5.2",

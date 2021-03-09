@@ -18,6 +18,8 @@ const api = {
   getCharts2: "/user/charts2",
   getCharts3: "/user/charts3",
   getLog: "/log/userLog",
+  getSystemLog: "/log/systemLog",
+  deleteSystemLog: "/log/delete",
   //请假相关
   leaveApply: "/leave/apply",
   //管理员查看所有记录
@@ -37,8 +39,9 @@ const api = {
   getRubbish: "/anno/rubbish",
   redo: "/anno/redo",
   search: "/anno/search",
-  //部门相关
+  //部门相关用于用户的回显
   getDeptInfo: "/dept/allDept",
+  getAllDept: "/dept/getAllDept",
   addDept: "/dept/add",
   editDept: "/dept/edit",
   deleteDept: "/dept/delete",
@@ -161,10 +164,19 @@ export function getUserDept(parameter) {
   });
 }
 
-//查询所有部门信息
+//查询所有部门信息（回显）
 export function getDeptInfo(parameter) {
   return request({
     url: api.getDeptInfo,
+    method: "get",
+    params: parameter
+  });
+}
+
+//查询所有部门信息（回显）
+export function getAllDept(parameter) {
+  return request({
+    url: api.getAllDept,
     method: "get",
     params: parameter
   });
@@ -245,6 +257,24 @@ export function getLog(parameter) {
     url: api.getLog,
     method: "get",
     params: parameter
+  });
+}
+
+//获取系统的日志
+export function getSystemLog(parameter) {
+  return request({
+    url: api.getSystemLog,
+    method: "get",
+    params: parameter
+  });
+}
+
+//删除系统日志
+export function deleteSystemLog(parameter) {
+  return request({
+    url: api.deleteSystemLog,
+    method: "post",
+    data: parameter
   });
 }
 

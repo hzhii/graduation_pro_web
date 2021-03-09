@@ -2,6 +2,7 @@
   <!-- 头部区域 -->
   <div class="container">
     <div class="title">
+      <svg-icon icon-class="档案" style="size:20px"></svg-icon>
       <span>档案信息管理系统</span>
     </div>
     <div class="box">
@@ -22,7 +23,7 @@
         />
       </div>
       <el-dropdown>
-        <span class="el-dropdown-link" style="color: #fff">
+        <span class="el-dropdown-link" style="color: black">
           {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">

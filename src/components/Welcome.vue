@@ -50,11 +50,19 @@
           </div>
           <!-- 操作按钮区域 -->
           <div class="button">
-            <el-button type="primary" @click="handleAdd" icon="el-icon-edit"
+            <el-button
+              type="primary"
+              @click="handleAdd"
+              icon="el-icon-edit"
+              v-has="'admin'"
               >添加公告</el-button
             >
             <el-popconfirm title="确定删除吗？" @onConfirm="handleDelete()">
-              <el-button type="danger" icon="el-icon-delete" slot="reference"
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                slot="reference"
+                v-has="'admin'"
                 >删除</el-button
               >
             </el-popconfirm>
@@ -62,6 +70,7 @@
               type="success"
               @click="handleRubbish"
               icon="el-icon-copy-document"
+              v-has="'admin'"
               >回收站</el-button
             >
           </div>

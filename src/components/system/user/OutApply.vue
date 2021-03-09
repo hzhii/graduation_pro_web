@@ -23,7 +23,12 @@
         <div class="main">
           <!-- 查询区域 -->
           <div class="search">
-            <el-form :inline="true" :model="queryInfo" class="demo-form-inline">
+            <el-form
+              :inline="true"
+              :model="queryInfo"
+              class="demo-form-inline"
+              v-has="'query'"
+            >
               <el-form-item label="姓名">
                 <el-input
                   placeholder="输入姓名"
@@ -139,6 +144,7 @@
                           icon="el-icon-check"
                           size="mini"
                           slot="reference"
+                          v-has="'edit'"
                           circle
                         ></el-button>
                       </el-popconfirm>
@@ -152,6 +158,7 @@
                           type="warning"
                           icon="el-icon-close"
                           size="mini"
+                          v-has="'edit'"
                           slot="reference"
                           circle
                         ></el-button>
@@ -166,6 +173,7 @@
                           type="danger"
                           icon="el-icon-delete"
                           size="mini"
+                          v-has="'deleted'"
                           slot="reference"
                           circle
                         ></el-button>

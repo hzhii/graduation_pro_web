@@ -43,7 +43,7 @@
                     class="demo-table-expand"
                   >
                     <el-form-item label="请假原因">
-                      <span>{{ props.row.reason }}</span>
+                      <span v-has="'query'">{{ props.row.reason }}</span>
                     </el-form-item>
                   </el-form>
                 </template>
@@ -115,6 +115,7 @@
                           type="success"
                           icon="el-icon-check"
                           size="mini"
+                          v-has="'edit'"
                           slot="reference"
                           circle
                         ></el-button>
@@ -130,6 +131,7 @@
                           icon="el-icon-close"
                           size="mini"
                           slot="reference"
+                          v-has="'edit'"
                           circle
                         ></el-button>
                       </el-popconfirm>
@@ -144,6 +146,7 @@
                           icon="el-icon-delete"
                           size="mini"
                           slot="reference"
+                          v-has="'deleted'"
                           circle
                         ></el-button>
                       </el-popconfirm>

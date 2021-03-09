@@ -28,7 +28,11 @@
           </div>
           <!-- 操作按钮区域 -->
           <div class="button">
-            <el-button type="primary" @click="handleAdd" icon="el-icon-edit"
+            <el-button
+              type="primary"
+              @click="handleAdd"
+              icon="el-icon-edit"
+              v-has="'admin'"
               >添加部门档案</el-button
             >
           </div>
@@ -63,6 +67,7 @@
                     type="primary"
                     icon="el-icon-edit"
                     size="mini"
+                    v-has="'admin'"
                     @click="handleEdit(scope.row)"
                   >
                   </el-button>
@@ -74,6 +79,7 @@
                       type="danger"
                       icon="el-icon-delete"
                       size="mini"
+                      v-has="'admin'"
                       slot="reference"
                     ></el-button>
                   </el-popconfirm>
@@ -170,7 +176,13 @@
 </template>
 
 <script>
-import { getDeptInfo, addDept, editDept, deleteDept } from "@/api/manage";
+import {
+  getDeptInfo,
+  addDept,
+  editDept,
+  deleteDept,
+  getAllDept
+} from "@/api/manage";
 import { isDeptPhone } from "@/utils/validate";
 import moment from "moment";
 export default {
@@ -264,7 +276,7 @@ export default {
     },
     getAllDept() {
       const that = this;
-      getDeptInfo(this.queryInfo)
+      getAllDept(this.queryInfo)
         .then(resp => {
           if (resp.code == 200) {
             that.tableData = resp.result.list;
