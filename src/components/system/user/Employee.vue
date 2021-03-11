@@ -76,20 +76,99 @@
                 <template slot-scope="props">
                   <el-form
                     label-position="left"
-                    inline
                     class="demo-table-expand"
                   >
-                    <el-form-item label="年龄:">
-                      <span v-has="'query'">{{ props.row.age }}</span>
+                    <el-form-item label="头像:">
+                      <img
+                        :src="
+                          props.row.avaterName
+                            ? 'http://localhost:8080' +
+                              '/avatar/' +
+                              props.row.avaterName
+                            : Avatar
+                        "
+                        style="width:80px;height:80px"
+                        v-has="'query'"
+                      />
                     </el-form-item>
-                    <br />
-                    <el-form-item label="地址:">
-                      <span v-has="'query'">{{ props.row.address }}</span>
+                    </br>
+                    <el-row>
+                      <el-col :span="2">
+                      <el-form-item label="年龄:">
+                     <span v-has="'query'">{{ props.row.age }}</span>
                     </el-form-item>
-                    <br />
+                      </el-col>
+                      <el-col :span="5">
                     <el-form-item label="联系方式:">
                       <span v-has="'query'">{{ props.row.telephone }}</span>
                     </el-form-item>
+                      </el-col>
+                      <el-col :span="5">
+                      <el-form-item label="邮箱:">
+                      <span v-has="'query'">{{ props.row.email }}</span>
+                      </el-form-item>
+                      </el-col>
+                      <el-col :span="5">
+                      <el-form-item label="身高体重:">
+                      <span v-has="'query'">{{ props.row.height }}</span>
+                      </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="3">
+                      <el-form-item label="民族:">
+                     <span v-has="'query'">{{ props.row.nation }}</span>
+                    </el-form-item>
+                      </el-col>
+                      <el-col :span="3">
+                    <el-form-item label="学历:">
+                      <span v-has="'query'">{{ props.row.education }}</span>
+                    </el-form-item>
+                      </el-col>
+                      <el-col :span="3">
+                      <el-form-item label="婚姻状况:">
+                      <span v-has="'query'">{{ props.row.marriage }}</span>
+                      </el-form-item>
+                      </el-col>
+                      <el-col :span="5">
+                      <el-form-item label="政治面貌:">
+                      <span v-has="'query'">{{ props.row.political }}</span>
+                      </el-form-item>
+                      </el-col>                     
+                    </el-row>
+                    <el-row>
+                    <el-col :span="6">
+                    <el-form-item label="毕业院校:">
+                      <span v-has="'query'">{{ props.row.university }}</span>
+                    </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                    <el-form-item label="所学专业:">
+                      <span v-has="'query'">{{ props.row.major }}</span>
+                    </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row>
+                    <el-col :span="16">
+                    <el-form-item label="居住地址:">
+                      <span v-has="'query'">{{ props.row.address }}</span>
+                    </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row>
+                    <el-col :span="16">
+                    <el-form-item label="籍贯:">
+                      <span v-has="'query'">{{ props.row.nativePlace }}</span>
+                    </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row>
+                    <el-col :span="16">
+                    <el-form-item label="身份证号:">
+                      <span v-has="'query'">{{ props.row.identityCard }}</span>
+                    </el-form-item>
+                    </el-col>
+                    </el-row>
                   </el-form>
                 </template>
               </el-table-column>
@@ -104,20 +183,6 @@
               <el-table-column prop="name" label="姓名" sortable width="180">
               </el-table-column>
               <el-table-column prop="username" label="用户名" width="180">
-              </el-table-column>
-              <el-table-column prop="avaterName" label="头像" width="180">
-                <template slot-scope="scope">
-                  <img
-                    :src="
-                      scope.row.avaterName
-                        ? 'http://localhost:8080' +
-                          '/avatar/' +
-                          scope.row.avaterName
-                        : Avatar
-                    "
-                    style="width:30px;height:30px"
-                  />
-                </template>
               </el-table-column>
               <el-table-column
                 prop="sex"

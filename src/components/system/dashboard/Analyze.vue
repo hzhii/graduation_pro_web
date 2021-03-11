@@ -21,16 +21,36 @@
         </div>
         <!-- 主体内容 -->
         <div class="main">
-          <!-- 中 -->
+          <!-- 上 -->
           <el-row :gutter="40" class="panel-group" style="height: 400px">
-            <el-col :span="12" class="card-panel-col">
+            <el-col :span="8" class="card-panel-col">
               <div class="card-panel">
                 <div ref="chart1" class="card-panel-description"></div>
               </div>
             </el-col>
-            <el-col :span="12" class="card-panel-col">
+            <el-col :span="8" class="card-panel-col">
               <div class="card-panel">
                 <div ref="chart2" class="card-panel-description"></div>
+              </div>
+            </el-col>
+            <el-col :span="8" class="card-panel-col">
+              <div class="card-panel">
+                <div ref="chart4" class="card-panel-description"></div>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- 中 -->
+          <el-row class="panel-group" style="height: 600px">
+            <el-col :span="24" class="card-panel-col">
+              <div class="card-panel">
+                <el-date-picker
+                  v-model="value2"
+                  type="month"
+                  :clearable="false"
+                  @change="changeDate"
+                >
+                </el-date-picker>
+                <div ref="chart5" class="card-panel-description"></div>
               </div>
             </el-col>
           </el-row>
@@ -50,14 +70,42 @@
 
 <script>
 import echarts from "echarts";
-import { getCharts1, getCharts2, getCharts3 } from "@/api/manage";
+import {
+  getCharts1,
+  getCharts2,
+  getCharts3,
+  getCharts4,
+  getCharts5
+} from "@/api/manage";
 require("echarts/theme/macarons"); // echarts theme
 export default {
   name: "Echarts",
   data() {
-    return {};
+    return {
+      activeName: "first",
+      value2: ""
+    };
   },
   methods: {
+    formatTime(value) {
+      var moment = require("moment");
+      if (value == undefined) {
+        return "";
+      }
+      return moment(value).format("YYYY-MM");
+    },
+    changeDate() {
+      this.value2 = this.formatTime(this.value2);
+      this.getCharts5();
+    },
+    getNowTime() {
+      var now = new Date();
+      var year = now.getFullYear(); //得到年份
+      var month = now.getMonth(); //得到月份
+      month = month + 1;
+      month = month.toString().padStart(2, "0");
+      this.value2 = `${year}-${month}`;
+    },
     async getCharts1() {
       const that = this;
       await getCharts1()
@@ -96,6 +144,30 @@ export default {
           this.$message.error("获取数据失败!");
         });
     },
+    async getCharts4() {
+      const that = this;
+      await getCharts4()
+        .then(resp => {
+          if (resp.code == 200) {
+            that.drawChart4(resp.result.education, resp.result.num);
+          }
+        })
+        .catch(err => {
+          this.$message.error("获取数据失败!");
+        });
+    },
+    async getCharts5() {
+      const that = this;
+      await getCharts5({ date: this.value2 })
+        .then(resp => {
+          if (resp.code == 200) {
+            that.drawChart5(resp.result.name, resp.result.num);
+          }
+        })
+        .catch(err => {
+          this.$message.error("获取数据失败!");
+        });
+    },
     drawChart1(data) {
       const that = this;
       const myChart = echarts.init(this.$refs.chart2);
@@ -105,22 +177,25 @@ export default {
           top: 20,
           left: "left"
         },
-        tooltip: { trigger: "axis" },
+        tooltip: {
+          trigger: "item"
+        },
         legend: {
-          top: 20
+          bottom: 0
         },
         series: [
           {
             name: "部门人数",
             type: "pie",
-            radius: "70%",
+            radius: ["40%", "70%"],
             center: ["50%", "50%"],
             roseType: "area",
             itemStyle: {
               borderRadius: 8
             },
             label: {
-              formatter: "{b}: %{d}"
+              show: true,
+              position: "inside"
             },
             data: data
           }
@@ -188,7 +263,7 @@ export default {
       const myChart = echarts.init(this.$refs.chart1);
       myChart.setOption({
         title: {
-          text: "部门员工年龄组成",
+          text: "员工年龄组成",
           top: 20,
           left: "left"
         },
@@ -216,13 +291,13 @@ export default {
                 color: function(params) {
                   //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
                   var colorList = [
-                    "#a29bfe",
-                    "#ff7675",
-                    "#fdcb6e",
-                    "#636e72",
-                    "#a29bfe",
-                    "#55efc4",
-                    "#e17055"
+                    "#0A64A4",
+                    "#24577B",
+                    "#03406A",
+                    "#3E94D1",
+                    "#65A5D1",
+                    "#A4BBCB",
+                    "#546571"
                   ];
                   return colorList[params.dataIndex];
                 },
@@ -236,12 +311,152 @@ export default {
           }
         ]
       });
+    },
+    drawChart4(education, num) {
+      const that = this;
+      const myChart = echarts.init(this.$refs.chart4);
+      myChart.setOption({
+        title: {
+          text: "员工学历组成",
+          top: 20
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow"
+          }
+        },
+        legend: {
+          data: education
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true
+        },
+        xAxis: {
+          type: "value",
+          boundaryGap: [0, 0.01]
+        },
+        yAxis: {
+          type: "category",
+          data: education
+        },
+        series: [
+          {
+            type: "bar",
+            data: num,
+            barWidth: "40%",
+            itemStyle: {
+              normal: {
+                //这里是重点
+                color: function(params) {
+                  //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+                  var colorList = [
+                    "#66A287",
+                    "#587A6A",
+                    "#216949",
+                    "#97D1B6",
+                    "#A6D1BD",
+                    "#90BAD8",
+                    "#9B9CDE"
+                  ];
+                  return colorList[params.dataIndex];
+                },
+                label: {
+                  color: "#000000",
+                  show: true,
+                  position: "inside"
+                }
+              }
+            },
+            label: {
+              color: "#000000",
+              show: true,
+              position: "inside"
+            }
+          }
+        ]
+      });
+    },
+    drawChart5(name, num) {
+      const that = this;
+      const myChart = echarts.init(this.$refs.chart5);
+      myChart.setOption({
+        title: {
+          left: "center",
+          text: that.formatTime(that.value2) + "月请假人数总览"
+        },
+        tooltip: { trigger: "axis" },
+        xAxis: {
+          data: name,
+          axisLabel: {
+            inside: true,
+            textStyle: {
+              color: "#fff"
+            }
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          z: 10
+        },
+        yAxis: {
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            textStyle: {
+              color: "#999"
+            }
+          }
+        },
+        dataZoom: [
+          {
+            type: "inside"
+          }
+        ],
+        series: [
+          {
+            type: "bar",
+            showBackground: true,
+            barWidth: "40%",
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: "#83bff6" },
+                { offset: 0.5, color: "#188df0" },
+                { offset: 1, color: "#188df0" }
+              ])
+            },
+            emphasis: {
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: "#2378f7" },
+                  { offset: 0.7, color: "#2378f7" },
+                  { offset: 1, color: "#83bff6" }
+                ])
+              }
+            },
+            data: num
+          }
+        ]
+      });
     }
   },
   created() {
+    this.getNowTime();
     this.getCharts1();
     this.getCharts2();
     this.getCharts3();
+    this.getCharts4();
+    this.getCharts5();
   }
 };
 </script>

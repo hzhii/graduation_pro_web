@@ -17,6 +17,8 @@ const api = {
   getCharts1: "/user/charts",
   getCharts2: "/user/charts2",
   getCharts3: "/user/charts3",
+  getCharts4: "/user/charts4",
+  getCharts5: "/user/charts5",
   getLog: "/log/userLog",
   getSystemLog: "/log/systemLog",
   deleteSystemLog: "/log/delete",
@@ -248,6 +250,23 @@ export function getCharts3() {
   return request({
     url: api.getCharts3,
     method: "get"
+  });
+}
+
+//echarts图标渲染
+export function getCharts4() {
+  return request({
+    url: api.getCharts4,
+    method: "get"
+  });
+}
+
+//echarts图标渲染
+export function getCharts5(parameter) {
+  return request({
+    url: api.getCharts5,
+    method: "get",
+    params: parameter
   });
 }
 

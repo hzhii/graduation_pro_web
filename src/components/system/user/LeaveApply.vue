@@ -22,6 +22,46 @@
         <!-- 主体内容 -->
         <div class="main">
           <!-- 查询区域 -->
+          <div class="search">
+            <el-form
+              :inline="true"
+              :model="queryInfo"
+              class="demo-form-inline"
+              v-has="'query'"
+            >
+              <el-form-item label="姓名">
+                <el-input
+                  placeholder="输入姓名"
+                  v-model="queryInfo.name"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="审核状态">
+                <el-select
+                  placeholder="请选择审核状态"
+                  v-model="queryInfo.status"
+                >
+                  <el-option
+                    v-for="item in statusType"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="success" icon="el-icon-search" @click="search"
+                  >查询</el-button
+                >
+                <el-button
+                  type="warning"
+                  icon="el-icon-refresh-right"
+                  @click="clear"
+                  >重置</el-button
+                >
+              </el-form-item>
+            </el-form>
+          </div>
           <!-- 操作按钮区域 -->
           <div class="button">
             <el-button type="primary" @click="applyAdd" icon="el-icon-edit"
@@ -255,6 +295,20 @@ import store from "@/store";
 export default {
   data() {
     return {
+      statusType: [
+        {
+          value: "审核中",
+          label: "审核中"
+        },
+        {
+          value: "通过",
+          label: "通过"
+        },
+        {
+          value: "不通过",
+          label: "不通过"
+        }
+      ],
       applyForm: {
         type: "",
         startTime: "",
@@ -285,6 +339,8 @@ export default {
       tableData: [],
       show: false,
       queryInfo: {
+        status: "",
+        name: "",
         pageNum: 1,
         pageSize: 5
       },
@@ -358,33 +414,48 @@ export default {
         that.applyClose();
       });
     },
+    search() {
+      const that = this;
+      this.getRecord();
+    },
+    clear() {
+      this.queryInfo.name = "";
+      this.queryInfo.status = "";
+      this.getRecord();
+    },
     getRecord() {
       const that = this;
       const role = this.$store.state.user.sysrole.nameZh;
       if (role == "系统管理员") {
         getLeaveRecord(this.queryInfo).then(resp => {
-          if (resp.code == 200) {
+          if (resp.code == 200 && resp.result != null) {
             that.tableData = resp.result.list;
             that.total = resp.result.total;
           } else {
+            that.tableData = [];
+            that.total = 0;
             that.$message.warning(resp.message);
           }
         });
       } else if (role == "普通员工") {
         getMyRecord(this.queryInfo).then(resp => {
-          if (resp.code == 200) {
+          if (resp.code == 200 && resp.result != null) {
             that.tableData = resp.result.list;
             that.total = resp.result.total;
           } else {
+            that.tableData = [];
+            that.total = 0;
             that.$message.warning(resp.message);
           }
         });
       } else {
         getDeptRecord(this.queryInfo).then(resp => {
-          if (resp.code == 200) {
+          if (resp.code == 200 && resp.result != null) {
             that.tableData = resp.result.list;
             that.total = resp.result.total;
           } else {
+            that.tableData = [];
+            that.total = 0;
             that.$message.warning(resp.message);
           }
         });
