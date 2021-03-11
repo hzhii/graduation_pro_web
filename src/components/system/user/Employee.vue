@@ -34,7 +34,7 @@
                 <el-button
                   type="success"
                   icon="el-icon-search"
-                  @click="fuzzySearch"
+                  @click="search"
                   >查询</el-button
                 >
                 <el-button
@@ -412,8 +412,7 @@ import {
   addUser,
   vaildUserName,
   deleteUser,
-  updateUser,
-  fuzzySearch
+  updateUser
 } from "@/api/manage";
 import docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
@@ -533,7 +532,10 @@ export default {
           if (resp.code == 200) {
             that.tableData = resp.result.list;
             that.total = resp.result.total;
+            this.$message.success("查询成功")
           } else {
+            that.tableData = [];
+            that.total = 0;
             that.$message.warning(resp.message);
           }
         })
@@ -634,6 +636,9 @@ export default {
       this.editForm = record;
       console.log("form", this.form);
     },
+    search(){
+      this.getAllUser();
+    },
     //提交添加表单
     handleSubmit() {
       const that = this;
@@ -677,23 +682,6 @@ export default {
           });
         that.editClose();
       });
-    },
-    //模糊查询
-    async fuzzySearch() {
-      const that = this;
-      await fuzzySearch(this.queryInfo)
-        .then(response => {
-          if (response.code == 200) {
-            that.tableData = response.result.list;
-            that.total = response.result.total;
-            this.$message.success("查询成功");
-            that.queryInfo.query = "";
-          }
-        })
-        .catch(error => {
-          this.$message.warning("?！");
-          console.log(error);
-        });
     },
     //清除查询条件并刷新
     clear() {
