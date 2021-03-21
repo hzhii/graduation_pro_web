@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../store";
-
+import { Message } from "element-ui";
 let apiBaseUrl = "http://localhost:8080";
 
 // 创建 axios 实例
@@ -29,6 +29,7 @@ service.interceptors.request.use(
 //配置响应拦截器
 service.interceptors.response.use(
   response => {
+    console.log(response);
     return response.data;
   },
   error => {

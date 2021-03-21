@@ -19,6 +19,7 @@ const api = {
   getCharts3: "/user/charts3",
   getCharts4: "/user/charts4",
   getCharts5: "/user/charts5",
+  resetPass: "/user/resetPass",
   getLog: "/log/userLog",
   getSystemLog: "/log/systemLog",
   deleteSystemLog: "/log/delete",
@@ -128,6 +129,15 @@ export function getAuth() {
   return request({
     url: api.auth,
     method: "get"
+  });
+}
+
+//重置员工密码
+export function resetPass(parameter) {
+  return request({
+    url: api.resetPass,
+    method: "post",
+    data: parameter
   });
 }
 

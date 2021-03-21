@@ -362,6 +362,7 @@
             v-model="editForm.dep"
             style="width: 192px"
             placeholder="请选择"
+            :disabled="this.$store.state.user.sysrole.nameZh!='系统管理员'"
           >
             <el-option
               v-for="item in allDept"
@@ -382,6 +383,7 @@
             v-model="editForm.role"
             style="width: 437px"
             placeholder="请选择"
+            :disabled="this.$store.state.user.sysrole.nameZh!='系统管理员'"
           >
             <el-option
               v-for="item in allRole"
@@ -390,6 +392,14 @@
               :value="item.roleId"
             />
           </el-select>
+        </el-form-item>
+        <el-form-item label="操作">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="resetPass(editForm.id)"
+            >密码重置
+           </el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -412,12 +422,14 @@ import {
   addUser,
   vaildUserName,
   deleteUser,
-  updateUser
+  updateUser,
+  resetPass
 } from "@/api/manage";
 import docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import JSZipUtils from "jszip-utils";
 import { saveAs } from "file-saver";
+import store from "@/store"
 export default {
   name: "Employee",
   data() {
@@ -519,6 +531,13 @@ export default {
     };
   },
   methods: {
+    resetPass(record){
+      resetPass({id:record}).then(resp=>{
+        if(resp.code == 200){
+          this.$message.success("密码重置成功!")
+        }
+      })
+    },
     formatter(row, column) {
       return row.address;
     },
@@ -620,6 +639,12 @@ export default {
       const that = this;
       deleteUser({ id: record }).then(resp => {
         if (resp.code == 200) {
+          let totalPage = Math.ceil((this.total - 1) / this.queryInfo.pageSize); // 总页数
+          let currentPage =
+            this.queryInfo.pageNum > totalPage
+              ? totalPage
+              : this.queryInfo.pageNum;
+          this.queryInfo.pageNum = currentPage < 1 ? 1 : currentPage;
           this.$message.success("删除成功");
           that.getAllUser();
         } else {
@@ -697,6 +722,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.tableData.sex == "1" ? "男" : "女"
           this.excelData = this.tableData; //你要导出的数据list。
           console.log("excel", this.excelData);
           that.export2Excel();
@@ -708,26 +734,46 @@ export default {
       require.ensure([], () => {
         const { export_json_to_excel } = require("../../../excel/Export2Excel"); //这里必须使用绝对路径
         const tHeader = [
-          "id",
-          "name",
-          "username",
-          "sex",
-          "age",
-          "address",
-          "telephone",
-          "nameZh",
-          "deptName"
+          "档案编号",
+          "员工姓名",
+          "性别",
+          "年龄",
+          "居住地址",
+          "联系电话",
+          "部门角色",
+          "所属部门",
+          "联系邮箱",
+          "婚姻状况",
+          "身高体重",
+          "身份证",
+          "民族",
+          "学历",
+          "政治面貌",
+          "健康状况",
+          "所学专业",
+          "毕业院校",
+          "籍贯地址"
         ]; // 导出的表头名
         const filterVal = [
           "id",
           "name",
-          "username",
           "sex",
           "age",
           "address",
           "telephone",
           "nameZh",
-          "deptName"
+          "deptName",
+          "email",
+          "marriage",
+          "height",
+          "identityCard",
+          "nation",
+          "education",
+          "political",
+          "health",
+          "major",
+          "university",
+          "nativePlace",
         ]; // 导出的表头字段名
         const list = that.excelData;
         const data = that.formatJson(filterVal, list);
@@ -752,14 +798,29 @@ export default {
           let doc = new docxtemplater().loadZip(zip);
           // 设置模板变量的值
           let docxData = {
-            time: "",
             name: record.name,
             sex: record.sex == "1" ? "男" : "女",
             age: record.age,
-            depaName: record.deptName,
+            deptName: record.deptName,
             nameZh: record.nameZh,
             telephone: record.telephone,
-            address: record.address
+            address: record.address,
+            id: record.id,
+            email: record.email,
+            marriage: record.marriage,
+            height: record.height,
+            identityCard: record.identityCard,
+            nation: record.nation,
+            education: record.education,
+            political: record.political,
+            health: record.health,
+            major: record.major,
+            nativePlace: record.nativePlace,
+            university: record.university,
+            family: record.family,
+            honor: record.honor,
+            workExperience: record.workExperience,
+            selfIntroduce: record.selfIntroduce
           };
           doc.setData({
             ...docxData

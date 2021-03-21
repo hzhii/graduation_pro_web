@@ -464,6 +464,12 @@ export default {
     handleDelete(record) {
       handleDeleteLeave({ id: record }).then(resp => {
         if (resp.code == 200) {
+          let totalPage = Math.ceil((this.total - 1) / this.queryInfo.pageSize); // 总页数
+          let currentPage =
+            this.queryInfo.pageNum > totalPage
+              ? totalPage
+              : this.queryInfo.pageNum;
+          this.queryInfo.pageNum = currentPage < 1 ? 1 : currentPage;
           this.$message.success("删除成功");
           this.getRecord();
         }

@@ -287,6 +287,7 @@
                 v-model="addForm.addressArray"
                 @change="handleChange"
                 clearable
+                filterable
                 style="width: 100%"
               ></el-cascader>
             </el-form-item>
@@ -522,6 +523,12 @@ export default {
       const that = this;
       deleteOutRecord({ id: record }).then(resp => {
         if (resp.code == 200) {
+          let totalPage = Math.ceil((this.total - 1) / this.queryInfo.pageSize); // 总页数
+          let currentPage =
+            this.queryInfo.pageNum > totalPage
+              ? totalPage
+              : this.queryInfo.pageNum;
+          this.queryInfo.pageNum = currentPage < 1 ? 1 : currentPage;
           this.$message.success("删除成功");
           that.getRecord();
         } else {

@@ -1,5 +1,24 @@
 <template>
-  <div class="login_container" :style="'background-image:url(' + bg + ');'">
+  <div class="login_container">
+    <vue-particles
+      class="lizi"
+      color="#dedede"
+      :particleOpacity="0.7"
+      :particlesNumber="80"
+      shapeType="circle"
+      :particleSize="4"
+      linesColor="#dedede"
+      :linesWidth="1"
+      :lineLinked="true"
+      :lineOpacity="0.4"
+      :linesDistance="150"
+      :moveSpeed="3"
+      :hoverEffect="true"
+      hoverMode="grab"
+      :clickEffect="true"
+      clickMode="push"
+    >
+    </vue-particles>
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avatar_box">
@@ -19,6 +38,7 @@
           <el-input
             prefix-icon="el-icon-user"
             v-model="loginForm.username"
+            placeholder="请输入用户名"
           ></el-input>
         </el-form-item>
         <!-- 密码 -->
@@ -26,6 +46,7 @@
           <el-input
             prefix-icon="el-icon-lock"
             v-model="loginForm.password"
+            placeholder="请输入密码"
             type="password"
           ></el-input>
         </el-form-item>
@@ -41,6 +62,7 @@
 
 <script>
 import { login } from "@/api/login";
+import { timeFix } from "@/utils/validate";
 import Background from "@/assets/background.jpg";
 import bg from "@/assets/bg.jpg";
 export default {
@@ -86,7 +108,12 @@ export default {
               _this.$store.commit("setPerms", response.result.perms);
               _this.$notify({
                 title: "登陆成功!",
-                message: "欢迎回来~",
+                message:
+                  `${timeFix()}` +
+                  "," +
+                  response.result.info.name +
+                  "," +
+                  "欢迎回来！",
                 type: "success"
               });
               this.$router.push("/index");
@@ -107,9 +134,13 @@ export default {
 
 <style scoped lang="less">
 .login_container {
-  background-color: #2b4b6b;
   height: 100%;
-  background-size: cover;
+  //background: url(../assets/bg.jpg) no-repeat center;
+  //background-size: cover;
+  .lizi {
+    height: 100%;
+    background: linear-gradient(-180deg, #40899b 0%, #6ad399 100%);
+  }
 }
 
 .login_box {

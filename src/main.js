@@ -7,6 +7,7 @@ import ElementUI from "element-ui";
 import store from "./store";
 import Blob from "./excel/Blob.js";
 import Export2Excel from "./excel/Export2Excel.js";
+import VueParticles from "vue-particles";
 import { getMenu, getAuth } from "@/api/manage";
 import "element-ui/lib/theme-chalk/index.css";
 import "./icons";
@@ -16,6 +17,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 Vue.use(vueResource);
 Vue.use(ElementUI);
+Vue.use(VueParticles);
 directive();
 import "./assets/css/global.css";
 
