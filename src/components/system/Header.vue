@@ -33,6 +33,12 @@
           <el-dropdown-item icon="el-icon-switch-button" @click.native="warn()"
             >注销登录
           </el-dropdown-item>
+          <el-dropdown-item
+            icon="el-icon-star-off"
+            @click.native="databasebackup"
+            v-if="this.$store.state.user.sysrole.nameZh == '系统管理员'"
+            >数据库备份
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -41,6 +47,8 @@
 
 <script>
 import { logout } from "@/api/login";
+import { databasebackup } from "@/api/manage";
+import store from "@/store";
 import Avatar from "@/assets/avatar.png";
 
 export default {
@@ -127,6 +135,13 @@ export default {
     clear() {
       clearInterval(this.nowTimes);
       this.nowTimes = null;
+    },
+    databasebackup() {
+      databasebackup().then(resp => {
+        if (resp.code == 200) {
+          this.$message.success("备份成功");
+        }
+      });
     }
   },
   created() {

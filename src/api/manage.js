@@ -69,7 +69,9 @@ const api = {
   outSearch: "/out/search",
   permission: "/permission",
   permissionNoPager: "/permission/no-pager",
-  info: "/api/getUserById"
+  info: "/api/getUserById",
+  //备份数据库
+  databasebackup: "/log/databasebackup"
 };
 
 //增加员工
@@ -559,4 +561,11 @@ export function outSearch(parameter) {
   });
 }
 
-//获取权限
+//数据库备份
+export function databasebackup(parameter) {
+  return request({
+    url: api.databasebackup,
+    method: "post",
+    data: parameter
+  });
+}
