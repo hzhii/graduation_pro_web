@@ -30,7 +30,7 @@
           <router-link to="/system/center">
             <el-dropdown-item icon="el-icon-user">个人信息</el-dropdown-item>
           </router-link>
-          <el-dropdown-item icon="el-icon-switch-button" @click.native="warn()"
+          <el-dropdown-item icon="el-icon-switch-button" @click.native="warn"
             >注销登录
           </el-dropdown-item>
           <el-dropdown-item

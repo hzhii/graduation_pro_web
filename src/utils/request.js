@@ -6,7 +6,7 @@ let apiBaseUrl = "http://localhost:8080";
 // 创建 axios 实例
 const service = axios.create({
   baseURL: apiBaseUrl,
-  timeout: 9000,
+  timeout: 12000,
   withCredentials: true
 });
 
@@ -29,7 +29,6 @@ service.interceptors.request.use(
 //配置响应拦截器
 service.interceptors.response.use(
   response => {
-    console.log(response);
     return response.data;
   },
   error => {

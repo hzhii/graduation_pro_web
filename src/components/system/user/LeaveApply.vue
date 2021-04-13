@@ -82,8 +82,8 @@
                     inline
                     class="demo-table-expand"
                   >
-                    <el-form-item label="请假原因">
-                      <span v-has="'query'">{{ props.row.reason }}</span>
+                    <el-form-item label="请假原因：">
+                      {{ props.row.reason }}
                     </el-form-item>
                   </el-form>
                 </template>
@@ -123,8 +123,8 @@
                 <template slot-scope="scope">
                   <el-tag
                     :type="
-                      scope.row.status == ''
-                        ? ' '
+                      scope.row.status == '审核中'
+                        ? 'success'
                         : scope.row.status == '通过'
                         ? 'primary'
                         : scope.row.auditStatus == '不通过'

@@ -197,7 +197,6 @@
                 prop="deptName"
                 label="所属部门"
                 sortable
-                width="180"
               >
               </el-table-column>
               <el-table-column

@@ -199,8 +199,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="editClose">取消</el-button>
-        <el-button type="primary" @click="editSubmit">确认</el-button>
+        <el-button type="text" @click="editClose">关闭</el-button>
       </div>
     </el-dialog>
     <!-- 回收站 -->

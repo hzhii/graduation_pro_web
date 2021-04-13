@@ -22,7 +22,12 @@
         <!-- 主体内容 -->
         <div class="main">
           <!-- 上 -->
-          <el-row :gutter="40" class="panel-group" style="height: 400px">
+          <el-row
+            :gutter="40"
+            class="panel-group"
+            style="height: 400px"
+            v-show="this.$store.state.user.sysrole.nameZh == '系统管理员'"
+          >
             <el-col :span="8" class="card-panel-col">
               <div class="card-panel">
                 <div ref="chart1" class="card-panel-description"></div>
@@ -55,7 +60,11 @@
             </el-col>
           </el-row>
           <!-- 下 -->
-          <el-row class="panel-group" style="height: 600px">
+          <el-row
+            class="panel-group"
+            style="height: 600px"
+            v-show="this.$store.state.user.sysrole.nameZh == '系统管理员'"
+          >
             <el-col :span="24" class="card-panel-col">
               <div class="card-panel">
                 <div ref="chart3" class="card-panel-description"></div>
@@ -420,7 +429,9 @@ export default {
         },
         dataZoom: [
           {
-            type: "inside"
+            type: "slider", //滑动轴
+            start: 1, //距离左侧0刻度的距离，1%
+            end: 35 //距离左侧0刻度的距离，35%，相当于规定了滑动的范围
           }
         ],
         series: [
