@@ -1,5 +1,9 @@
 <template>
-  <div class="login_container">
+  <div
+    class="login_container"
+    v-loading="loading"
+    element-loading-text="拼命加载中"
+  >
     <vue-particles
       class="lizi"
       color="#dedede"
@@ -68,6 +72,7 @@ import bg from "@/assets/bg.jpg";
 export default {
   data() {
     return {
+      loading: false,
       Background: Background,
       bg: bg,
       //登录表单的数据绑定对象
@@ -93,6 +98,7 @@ export default {
       this.$refs.loginFormRef.resetFields();
     },
     signIn() {
+      this.loading = true;
       const _this = this;
       const h = this.$createElement;
       this.$refs.loginFormRef.validate(async valid => {
@@ -106,6 +112,7 @@ export default {
               _this.$store.commit("setToken", response.result.token);
               _this.$store.commit("setUser", response.result.info);
               _this.$store.commit("setPerms", response.result.perms);
+              _this.loading = false;
               _this.$notify({
                 title: "登陆成功!",
                 message:
@@ -119,6 +126,7 @@ export default {
               this.$router.push("/index");
             } else {
               this.$message.error("用户名或密码错误");
+              this.loading = false;
             }
             console.log(response);
           })

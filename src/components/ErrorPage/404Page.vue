@@ -2,39 +2,67 @@
   <div class="wscn-http404-container">
     <div class="wscn-http404">
       <div class="pic-404">
-        <img class="pic-404__parent" src="@/assets/404_images/404.png" alt="404">
-        <img class="pic-404__child left" src="@/assets/404_images/404_cloud.png" alt="404">
-        <img class="pic-404__child mid" src="@/assets/404_images/404_cloud.png" alt="404">
-        <img class="pic-404__child right" src="@/assets/404_images/404_cloud.png" alt="404">
+        <img
+          class="pic-404__parent"
+          src="@/assets/404_images/404.png"
+          alt="404"
+        />
+        <img
+          class="pic-404__child left"
+          src="@/assets/404_images/404_cloud.png"
+          alt="404"
+        />
+        <img
+          class="pic-404__child mid"
+          src="@/assets/404_images/404_cloud.png"
+          alt="404"
+        />
+        <img
+          class="pic-404__child right"
+          src="@/assets/404_images/404_cloud.png"
+          alt="404"
+        />
       </div>
       <div class="bullshit">
         <div class="bullshit__oops">OOPS!</div>
-        <div class="bullshit__info">All rights reserved
-          <a style="color:#20a0ff" href="https://wallstreetcn.com" target="_blank">wallstreetcn</a>
+        <div class="bullshit__info">
+          <h2>小朋友是不是迷路啦</h2>
         </div>
         <div class="bullshit__headline">{{ message }}</div>
-        <div class="bullshit__info">Please check that the URL you entered is correct, or click the button below to return to the homepage.</div>
-        <a href="" class="bullshit__return-home">Back to home</a>
+        <div class="bullshit__info">
+          This page isn't exist,Please check that the URL you entered is correct
+        </div>
+        <a href="/system/welcome" class="bullshit__return-home">返回首页</a>
+        <a
+          href="javascript:void(0)"
+          class="bullshit__return-home"
+          @click="goPre"
+          >前一页</a
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'Page404',
+  name: "Page404",
+  methods: {
+    goPre() {
+      this.$router.go(-1);
+    }
+  },
   computed: {
     message() {
-      return 'The webmaster said that you can not enter this page...'
+      return "该页面暂时不存在，请检查输入网址是否有误哦";
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-.wscn-http404-container{
-  transform: translate(-50%,-50%);
+.wscn-http404-container {
+  transform: translate(-50%, -50%);
   position: absolute;
   top: 40%;
   left: 50%;
